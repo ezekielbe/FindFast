@@ -10,6 +10,9 @@ import com.aungsanoo.findfast.Activities.DashboardActivity
 import com.aungsanoo.findfast.Activities.LoginActivity
 import com.aungsanoo.findfast.Utils.Utils
 
+/**
+ * Activity to navigate to Login or Register or Dashboard based on User session
+ */
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
