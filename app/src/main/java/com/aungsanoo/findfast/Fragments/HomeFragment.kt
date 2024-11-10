@@ -4,20 +4,61 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.aungsanoo.findfast.R
+import androidx.recyclerview.widget.GridLayoutManager
+import com.aungsanoo.findfast.Adapters.ProductAdapter
+import com.aungsanoo.findfast.Models.Product
+import com.aungsanoo.findfast.Utils.API.ApiClient
+import com.aungsanoo.findfast.databinding.FragmentHomeBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {}
-    }
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
-        return view
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Set up RecyclerView layout manager
+        binding.productRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+        // Fetch and display products
+        fetchProducts()
+    }
+
+    private fun fetchProducts() {
+        ApiClient.apiService.getProducts().enqueue(object : Callback<List<Product>> {
+            override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
+                if (response.isSuccessful && response.body() != null) {
+                    val products = response.body()!!
+                    // Pass 'requireActivity()' as the activity parameter for ProductAdapter
+                    binding.productRecyclerView.adapter = ProductAdapter(products, requireActivity())
+                } else {
+                    Toast.makeText(requireContext(), "Failed to load products", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Product>>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                t.printStackTrace()
+            }
+        })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

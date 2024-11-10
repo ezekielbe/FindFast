@@ -16,6 +16,7 @@ transactions_collection = db.transactions
 #login
 from flask import jsonify, request
 
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -53,7 +54,7 @@ def register():
         "updatedTime": currentTime,
         "defaultAddress": defaultAddress
     }
-    
+
     try:
         users_collection.insert_one(new_user)
         return jsonify({
@@ -88,6 +89,41 @@ def login():
             "status": "error",
             "message": "Invalid credentials"
         }), 401
+
+@app.route('/products', methods=['GET'])
+def get_products():
+    name = request.args.get('name')
+    material = request.args.get('material')
+    price_range = request.args.get('priceRange')
+
+    query = {}
+
+    if name:
+        query['name'] = {'$regex': name, '$options': 'i'}  # case-insensitive search
+    if material:
+        query['material'] = material
+    if price_range:
+        min_price, max_price = map(float, price_range.split('-'))
+        query['price'] = {'$gte': min_price, '$lte': max_price}
+
+    products = []
+    for product in products_collection.find(query):
+        products.append({
+            "id": str(product["_id"]),
+            "name": product["name"],
+            "price": product["price"],
+            "description": product["description"],
+            "material": product["material"],
+            "color": product.get("color", []),
+            "size": product.get("size", []),
+            "availability": product["availability"],
+            "qty": product["qty"],
+            "aisle": product["aisle"],
+            "type": product["type"],
+            "shelf": product["shelf"],
+            "bin": product["bin"]
+        })
+    return jsonify(products), 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)

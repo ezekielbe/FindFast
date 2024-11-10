@@ -1,5 +1,5 @@
 package com.aungsanoo.findfast.Constants
 
 object Constants {
-    val BASE_URL = "http://192.168.1.73:8888/"
+    val BASE_URL = "http://10.0.2.2:8888/"
 }
