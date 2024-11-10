@@ -1,12 +1,21 @@
 package com.aungsanoo.findfast.Utils
 
+import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 
-class Utils {
-    companion object {
-        fun validUserSession(): Boolean {
-            // TODO : write logic for user token check here
-            return true;
-        }
+object Utils {
+    fun validUserSession(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null)
+        return userId != null
+    }
+
+    fun logoutUserSession(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+        sharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.remove("user_id")  // Remove the key-value pair
+        editor.apply()
     }
 }

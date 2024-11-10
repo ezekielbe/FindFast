@@ -21,6 +21,7 @@ def register():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
+    phone = data.get("phone")
     role = data.get("role")
     isAdmin = data.get("isAdmin")
     currentTime = datetime.utcnow()
@@ -35,7 +36,7 @@ def register():
         }), 400
 
     # Check if all fields are provided
-    if not all([username, password, role, isAdmin is not None]):
+    if not all([username, password, phone, role, isAdmin is not None]):
         return jsonify({
             "status": False,
             "message": "All fields are required: username, password, role, isAdmin, and wishlist."
@@ -45,6 +46,7 @@ def register():
     new_user = {
         "username": username,
         "password": password,
+        "phone": phone,
         "role": role,
         "isAdmin": isAdmin,
         "createdTime": currentTime,
@@ -76,7 +78,7 @@ def login():
     user = users_collection.find_one({"username": username, "password": password})
     if user:
         return jsonify({
-            "status": "success",
+            "status": True,
             "userId": str(user["_id"]),
             "isAdmin": user.get("isAdmin", False),
             "message": "Login successful"

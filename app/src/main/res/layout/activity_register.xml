@@ -1,109 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.RegisterActivity"
-    android:background="@color/primary">
+    android:background="@color/primary"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".Activities.RegisterActivity">
 
-    <!-- Title TextView -->
     <TextView
-        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:text="Register"
         android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp" />
+        android:textStyle="bold" />
 
-    <!-- Username EditText -->
     <EditText
-        android:id="@+id/registerUsernameEditText"
-        android:layout_width="0dp"
+        android:id="@+id/edtName"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Username"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/textView3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/username"
+        android:inputType="text" />
 
-    <!-- Email EditText -->
     <EditText
-        android:id="@+id/registerEmailEditText"
-        android:layout_width="0dp"
+        android:id="@+id/edtEmail"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@id/registerUsernameEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
 
-    <!-- Phone Number EditText -->
     <EditText
-        android:id="@+id/registerPhoneEditText"
-        android:layout_width="0dp"
+        android:id="@+id/edtPhone"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Phone Number"
-        android:inputType="phone"
-        app:layout_constraintTop_toBottomOf="@id/registerEmailEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/phone_number"
+        android:inputType="phone" />
 
-    <!-- Password EditText -->
     <EditText
-        android:id="@+id/registerPasswordEditText"
-        android:layout_width="0dp"
+        android:id="@+id/edtPassword"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/registerPhoneEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/password"
+        android:inputType="textPassword" />
 
-    <!-- Confirm Password EditText -->
     <EditText
-        android:id="@+id/confirmPasswordEditText"
-        android:layout_width="0dp"
+        android:id="@+id/edtPassword2"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:hint="Confirm Password"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/registerPasswordEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword" />
 
-    <!-- Register Button -->
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text=""
+        android:visibility="invisible"
+        android:textColor="@color/error"/>
+
     <Button
-        android:id="@+id/registerButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/btnRegister"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
         android:backgroundTint="@color/black"
-        android:text="Register"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="@string/register"
+        android:layout_marginVertical="12dp"
+        android:textColor="@color/white" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/if_you_already_have_an_account"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:textColor="@color/secondary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/here"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

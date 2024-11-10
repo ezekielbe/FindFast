@@ -5,4 +5,7 @@
     <color name="primary">#8583a4</color>
     <color name="secondary">#FF2b2d42</color>
     <color name="accent">#FFedf2f4</color>
+    <color name="info">#FF0000FF</color>
+    <color name="warning">#FFFFFF00</color>
+    <color name="error">#A63A3A</color>
 </resources>

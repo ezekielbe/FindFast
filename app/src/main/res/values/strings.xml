@@ -2,4 +2,15 @@
     <string name="app_name">Find Fast</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="if_you_don_t_have_an_account">If you don\'t have an account,\u0020</string>
+    <string name="register">Register</string>
+    <string name="here">\u0020here.</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="if_you_already_have_an_account">"If you already have an account,\u0020"</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
 </resources>

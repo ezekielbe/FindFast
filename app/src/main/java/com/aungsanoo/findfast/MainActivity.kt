@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun handleUserSessionCheck() : Boolean {
-        if(Utils.validUserSession()) {
+        if(Utils.validUserSession(this@MainActivity)) {
             val intent = Intent(this@MainActivity, DashboardActivity::class.java)
             startActivity(intent)
             finish()
