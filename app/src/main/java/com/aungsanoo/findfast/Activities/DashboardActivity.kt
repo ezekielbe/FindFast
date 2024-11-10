@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Fragments.CartFragment
 import com.aungsanoo.findfast.Fragments.HomeFragment
 import com.aungsanoo.findfast.Fragments.ProfileFragment
 import com.aungsanoo.findfast.Fragments.SearchFragment
@@ -62,8 +63,12 @@ class DashboardActivity : AppCompatActivity() {
                     selectedFragment = searchFragment
                     tag = "SEARCH"
                 }
-                R.id.transactionFragment -> {
-                    selectedFragment = transactionsFragment
+//                R.id.transactionFragment -> {
+//                    selectedFragment = transactionsFragment
+//                    tag = "TRANSACTIONS"
+//                }
+                R.id.cartFragment -> {
+                    selectedFragment = CartFragment()
                     tag = "TRANSACTIONS"
                 }
                 R.id.profileFragment -> {

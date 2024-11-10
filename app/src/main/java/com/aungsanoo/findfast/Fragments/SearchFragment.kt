@@ -34,11 +34,9 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up RecyclerView and Material Spinner
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         setupMaterialSpinner()
 
-        // Set up search button click listener
         binding.searchButton.setOnClickListener {
             performSearch()
         }

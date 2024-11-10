@@ -31,10 +31,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up RecyclerView layout manager
         binding.productRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-        // Fetch and display products
         fetchProducts()
     }
 
@@ -43,7 +41,7 @@ class HomeFragment : Fragment() {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
-                    // Pass 'requireActivity()' as the activity parameter for ProductAdapter
+
                     binding.productRecyclerView.adapter = ProductAdapter(products, requireActivity())
                 } else {
                     Toast.makeText(requireContext(), "Failed to load products", Toast.LENGTH_SHORT).show()
