@@ -29,7 +29,8 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     productMaterial = product.material.joinToString(", "),
                     productColor = product.color.joinToString(", "),
                     productSize = product.size.joinToString(", "),
-                    productAvailability = product.availability
+                    productAvailability = product.availability,
+                    productId = product.id
                 )
 
                 activity.supportFragmentManager.beginTransaction()
@@ -37,6 +38,7 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     .addToBackStack(null)
                     .commit()
             }
+
         }
     }
 

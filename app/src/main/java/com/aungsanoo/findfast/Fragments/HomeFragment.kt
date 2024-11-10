@@ -30,9 +30,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.productRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-
         fetchProducts()
     }
 
@@ -41,7 +39,6 @@ class HomeFragment : Fragment() {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
-
                     binding.productRecyclerView.adapter = ProductAdapter(products, requireActivity())
                 } else {
                     Toast.makeText(requireContext(), "Failed to load products", Toast.LENGTH_SHORT).show()
@@ -50,7 +47,6 @@ class HomeFragment : Fragment() {
 
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                t.printStackTrace()
             }
         })
     }

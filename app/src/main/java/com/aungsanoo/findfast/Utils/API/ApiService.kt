@@ -1,6 +1,8 @@
 package com.aungsanoo.findfast.Utils.API
 
+import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.Models.Product
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterRequest
@@ -31,12 +33,13 @@ interface ApiService {
         @Query("priceRange") priceRange: String?
     ): Call<List<Product>>
 
-    @FormUrlEncoded
     @POST("update_cart")
     fun updateCart(
-        @Field("user_id") userId: String,
-        @Field("product_id") productId: String,
-        @Field("quantity") quantity: Int
+        @Body request: CartUpdateRequest
     ): Call<ResponseBody>
+
+
+    @GET("get_cart")
+    fun getCartItems(@Query("user_id") userId: String): Call<List<CartItem>>
 
 }

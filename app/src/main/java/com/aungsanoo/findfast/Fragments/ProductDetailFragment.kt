@@ -1,12 +1,15 @@
 package com.aungsanoo.findfast.Fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.aungsanoo.findfast.Utils.API.ApiClient
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.databinding.FragmentProductDetailBinding
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -17,7 +20,7 @@ class ProductDetailFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
-    private var currentQty = 1  // Default quantity
+    private var currentQty = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,18 +32,26 @@ class ProductDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
 
+        val userId = sharedPreferences.getString("user_id", null)
+
+        val productId = arguments?.getString("productId")
         val productName = arguments?.getString("productName")
-        val productPrice = arguments?.getDouble("productPrice", 0.0)
+        val productPrice = arguments?.getDouble("productPrice")
         val productDescription = arguments?.getString("productDescription")
         val productMaterial = arguments?.getString("productMaterial")
         val productColor = arguments?.getString("productColor")
         val productSize = arguments?.getString("productSize")
-        val productAvailability = arguments?.getBoolean("productAvailability", true)
-
+        val productAvailability = arguments?.getBoolean("productAvailability")
         binding.productName.text = productName
-        binding.productPrice.text = "Price: $$productPrice"
+        binding.productPrice.text = productPrice.toString()
         binding.productDescription.text = productDescription
+        binding.productMaterial.text = productMaterial
+        binding.productColor.text = productColor
+        binding.productSize.text = productSize
+        binding.productAvailability.text = if (productAvailability == true) "Available" else "Out of Stock"
+        binding.qtyTxt.text = currentQty.toString()
 
         binding.qtyTxt.text = currentQty.toString()
 
@@ -56,25 +67,26 @@ class ProductDetailFragment : Fragment() {
             }
         }
 
-        binding.addToCartBtn.setOnClickListener {
-            val userId = ""
-            val productId = ""
-            val quantity = binding.qtyTxt.text.toString().toInt()
+        if (userId != null && productId != null) {
+            println("User ID: $userId")
+            println("Product ID: $productId")
 
-            addToCart(userId, productId, quantity)
+            binding.addToCartBtn.setOnClickListener {
+                val quantity = binding.qtyTxt.text.toString().toInt()
+                addToCart(userId, productId, quantity)
+            }
+        } else {
+            Toast.makeText(requireContext(), "User ID or Product ID not found", Toast.LENGTH_SHORT).show()
         }
-
     }
 
-
-
     private fun addToCart(userId: String, productId: String, quantity: Int) {
-        val requestData = mapOf(
-            "user_id" to userId,
-            "product_id" to productId,
-            "quantity" to quantity
+        val request = CartUpdateRequest(
+            user_id = userId,
+            product_id = productId,
+            quantity = quantity
         )
-        ApiClient.apiService.updateCart(userId, productId, quantity).enqueue(object : Callback<ResponseBody> {
+        ApiClient.apiService.updateCart(request).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Added to cart successfully!", Toast.LENGTH_SHORT).show()
@@ -89,8 +101,6 @@ class ProductDetailFragment : Fragment() {
         })
     }
 
-
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -104,7 +114,8 @@ class ProductDetailFragment : Fragment() {
             productMaterial: String,
             productColor: String,
             productSize: String,
-            productAvailability: Boolean
+            productAvailability: Boolean,
+            productId: String
         ) = ProductDetailFragment().apply {
             arguments = Bundle().apply {
                 putString("productName", productName)
@@ -114,6 +125,7 @@ class ProductDetailFragment : Fragment() {
                 putString("productColor", productColor)
                 putString("productSize", productSize)
                 putBoolean("productAvailability", productAvailability)
+                putString("productId", productId)
             }
         }
     }

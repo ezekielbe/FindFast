@@ -124,6 +124,8 @@ def get_products():
             "bin": product["bin"]
         })
     return jsonify(products), 200
+
+
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
     data = request.get_json()
@@ -134,17 +136,46 @@ def update_cart():
     if not all([user_id, product_id, quantity]):
         return jsonify({"status": False, "message": "Missing data"}), 400
 
-    user = users_collection.find_one({"_id": ObjectId(user_id)})
-    if user:
-        cart = user.get("cart", {})
-        cart[str(product_id)] = quantity
-        users_collection.update_one(
-            {"_id": ObjectId(user_id)},
-            {"$set": {"cart": cart}}
+    # Check if an entry already exists for this user and product
+    cart_item = db.cart.find_one({"user_id": user_id, "product_id": product_id})
+
+    if cart_item:
+        # Update quantity if item exists in cart
+        db.cart.update_one(
+            {"user_id": user_id, "product_id": product_id},
+            {"$set": {"quantity": quantity}}
         )
-        return jsonify({"status": True, "message": "Cart updated successfully"}), 200
     else:
+        # Insert new item in cart if it doesn't exist
+        db.cart.insert_one({
+            "user_id": user_id,
+            "product_id": product_id,
+            "quantity": quantity
+        })
+
+    return jsonify({"status": True, "message": "Cart updated successfully"}), 200
+
+@app.route('/get_cart_items', methods=['GET'])
+def get_cart_items():
+    user_id = request.args.get("user_id")
+    if not user_id:
+        return jsonify({"status": False, "message": "User ID not provided"}), 400
+
+    user = users_collection.find_one({"_id": ObjectId(user_id)})
+    if not user:
         return jsonify({"status": False, "message": "User not found"}), 404
+
+    cart_items = cart_collection.find({"user_id": ObjectId(user_id)})
+    items = [
+        {
+            "productId": str(item["product_id"]),
+            "productName": item["product_name"],
+            "productPrice": item["product_price"],
+            "quantity": item["quantity"]
+        }
+        for item in cart_items
+    ]
+    return jsonify(items), 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
