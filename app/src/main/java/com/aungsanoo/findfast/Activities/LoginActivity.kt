@@ -12,7 +12,6 @@ import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterResponse
 import com.aungsanoo.findfast.databinding.ActivityLoginBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -33,16 +33,15 @@ class LoginActivity : AppCompatActivity() {
         }
 
         handleLoginPressed()
-
         handleRegister()
     }
 
     private fun handleLoginPressed() {
         binding.btnLogin.setOnClickListener {
-            var error: String = validate()
+            binding.tvError.visibility = View.INVISIBLE
+            val error = validate()
 
             if (error.isEmpty()) {
-                binding.tvError.visibility = View.INVISIBLE
                 loginUser()
             } else {
                 renderError(error)
@@ -51,40 +50,41 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validate(): String {
-        var name: String = binding.edtName.text.toString()
-        var pw1: String = binding.edtName.text.toString()
+        val name: String = binding.edtName.text.toString()
+        val pw: String = binding.edtPassword.text.toString()
 
-        var error: String = ""
-
-        if (name.isEmpty()) error = "Name is required!"
-        else if (pw1.isEmpty()) error = "Password is required!"
-
-        return error;
+        return when {
+            name.isEmpty() -> "Name is required!"
+            pw.isEmpty() -> "Password is required!"
+            else -> ""
+        }
     }
 
     private fun loginUser() {
-        var username: String = binding.edtName.text.toString()
-        var password: String = binding.edtPassword.text.toString()
+        val username: String = binding.edtName.text.toString()
+        val password: String = binding.edtPassword.text.toString()
         val loginRequest = LoginRequest(username, password)
 
         ApiClient.apiService.login(loginRequest).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
-                    val registerResponse = response.body()
-                    if (registerResponse?.status == true) {
-                        val userId = registerResponse.userId
+                    val loginResponse = response.body()
+                    if (loginResponse?.status == true) {
+                        val userId = loginResponse.userId
                         if (userId != null) {
                             val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
                             sharedPreferences.edit().putString("user_id", userId).apply()
+
                             Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
                             val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                            intent.putExtra("isAdmin", registerResponse.isAdmin)
+                            intent.putExtra("isAdmin", loginResponse.isAdmin)
                             startActivity(intent)
+                            finish()
                         }
                     } else {
-                        Toast.makeText(this@LoginActivity, "Login failed: ${registerResponse?.message}", Toast.LENGTH_SHORT).show()
-                        registerResponse?.message?.let { renderError(it) }
+                        Toast.makeText(this@LoginActivity, "Login failed: ${loginResponse?.message}", Toast.LENGTH_SHORT).show()
+                        loginResponse?.message?.let { renderError(it) }
                     }
                 } else {
                     Toast.makeText(this@LoginActivity, "Server error: ${response.code()}", Toast.LENGTH_SHORT).show()

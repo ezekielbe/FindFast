@@ -6,18 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import com.aungsanoo.findfast.Fragments.HomeFragment
-import com.aungsanoo.findfast.Fragments.ProfileFragment
-import com.aungsanoo.findfast.Fragments.SearchFragment
-import com.aungsanoo.findfast.Fragments.TransactionsFragment
+import com.aungsanoo.findfast.Fragments.*
 import com.aungsanoo.findfast.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-/**
- * Entry activity where it controls to display different menu
- * For Admins =>    Dashboard  | Search    | Financial Report   | Add item | Profile
- * For Users =>     Home       | Search    | Transactions       | Profile
- */
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var homeFragment: HomeFragment
@@ -50,44 +42,24 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            var selectedFragment: Fragment? = null
-            var tag: String? = ""
-
-            when (menuItem.itemId) {
-                R.id.homeFragment -> {
-                    selectedFragment = homeFragment
-                    tag = "HOME"
-                }
-                R.id.searchFragment -> {
-                    selectedFragment = searchFragment
-                    tag = "SEARCH"
-                }
-                R.id.transactionFragment -> {
-                    selectedFragment = transactionsFragment
-                    tag = "TRANSACTIONS"
-                }
-                R.id.profileFragment -> {
-                    selectedFragment = profileFragment
-                    tag = "PROFILE"
-                }
-                else -> return@setOnItemSelectedListener false
+            val selectedFragment: Fragment? = when (menuItem.itemId) {
+                R.id.homeFragment -> homeFragment
+                R.id.searchFragment -> searchFragment
+                R.id.cartFragment -> CartFragment()
+                R.id.profileFragment -> profileFragment
+                else -> null
             }
 
-            supportFragmentManager.beginTransaction()
-                .apply {
-                    supportFragmentManager.fragments.forEach { fragment ->
-                        if (fragment != selectedFragment) {
-                            hide(fragment)
+            selectedFragment?.let {
+                supportFragmentManager.beginTransaction()
+                    .apply {
+                        supportFragmentManager.fragments.forEach { fragment ->
+                            if (fragment != selectedFragment) hide(fragment)
                         }
+                        if (selectedFragment.isAdded) show(selectedFragment) else add(R.id.fragmentContainer, selectedFragment)
                     }
-                    if (selectedFragment?.isAdded == true) {
-                        show(selectedFragment)
-                    } else {
-                        add(R.id.fragmentContainer, selectedFragment!!, tag)
-                    }
-                }
-                .commit()
-
+                    .commit()
+            }
             true
         }
     }

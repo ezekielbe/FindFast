@@ -19,4 +19,14 @@
     <string name="welcome">Welcome!</string>
     <string name="update_profile">Update Profile</string>
     <string name="cancel">Cancel</string>
+
+    <string-array name="material_options">
+        <item>All</item>
+        <item>Wood</item>
+        <item>Metal</item>
+        <item>Plastic</item>
+        <item>Glass</item>
+    </string-array>
+
+
 </resources>

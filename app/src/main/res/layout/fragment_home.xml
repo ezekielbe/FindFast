@@ -5,15 +5,16 @@
     android:layout_gravity="center"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Home Fragment" />
+<!--    <TextView-->
+<!--        android:id="@+id/userWelcome"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Hello User" />-->
 
-    <TextView
-        android:id="@+id/textView4"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Create another one for admin dashbord" />
+        android:layout_height="match_parent" />
+
+
 </LinearLayout>
