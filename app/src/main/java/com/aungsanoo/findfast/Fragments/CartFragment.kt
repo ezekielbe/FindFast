@@ -2,6 +2,7 @@ package com.aungsanoo.findfast.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,10 +46,15 @@ class CartFragment : Fragment() {
             ApiClient.apiService.getCartItems(userId).enqueue(object : Callback<List<CartItem>> {
                 override fun onResponse(call: Call<List<CartItem>>, response: Response<List<CartItem>>) {
                     if (response.isSuccessful && response.body() != null) {
+
                         val cartItems = response.body()!!
-                        cartAdapter = CartItemAdapter(cartItems)
-                        binding.cartRecyclerView.adapter = cartAdapter
-                        updateTotalPrice(cartItems)
+                        if (cartItems.isNotEmpty()) {
+                            cartAdapter = CartItemAdapter(cartItems)
+                            binding.cartRecyclerView.adapter = cartAdapter
+                            updateTotalPrice(cartItems)
+                        } else {
+                            Toast.makeText(requireContext(), "No items in cart", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
                         Toast.makeText(requireContext(), "Failed to load cart items: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }

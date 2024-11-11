@@ -163,18 +163,32 @@ def get_cart_items():
     if not user_id:
         return jsonify({"status": False, "message": "User ID not provided"}), 400
 
-    cart_items = cart_collection.find({"user_id": user_id})  # Retrieve all items for the user
+    cart_items = cart_collection.find({"user_id": user_id})
+    items = []
 
-    items = [
-        {
-            "productId": str(item["product_id"]),
-            "productName": item.get("product_name"),
-            "productPrice": item.get("product_price"),
-            "quantity": item.get("quantity")
-        }
-        for item in cart_items
-    ]
+    for item in cart_items:
+        product_id = item["product_id"]
+        quantity = item.get("quantity", 1)
+
+        product = products_collection.find_one({"_id": ObjectId(product_id)})
+
+        if product:
+            items.append({
+                "productId": str(product["_id"]),
+                "productName": product.get("name"),
+                "productPrice": product.get("price"),
+                "quantity": quantity
+            })
+        else:
+            items.append({
+                "productId": product_id,
+                "productName": None,
+                "productPrice": None,
+                "quantity": quantity
+            })
+
     return jsonify(items), 200
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
