@@ -13,4 +13,10 @@
     <string name="if_you_already_have_an_account">"If you already have an account,\u0020"</string>
     <string name="login">Login</string>
     <string name="logout">Logout</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="order_history">Order History</string>
+    <string name="cart">Cart</string>
+    <string name="welcome">Welcome!</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="cancel">Cancel</string>
 </resources>

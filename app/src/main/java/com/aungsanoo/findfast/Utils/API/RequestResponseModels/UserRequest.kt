@@ -1,10 +1,8 @@
 package com.aungsanoo.findfast.Utils.API.RequestResponseModels
 
-data class RegisterRequest(
+data class UserRequest(
     val username: String,
     val password: String,
     val phone: String,
-    val role: String,
-    val email: String,
-    val isAdmin: Boolean
+    val email: String
 )
