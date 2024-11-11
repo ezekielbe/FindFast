@@ -75,7 +75,7 @@ class RegisterActivity : AppCompatActivity() {
         var password: String = binding.edtPassword.text.toString()
         var phone: String = binding.edtPhone.text.toString()
         var email: String = binding.edtEmail.text.toString()
-        val registerRequest = RegisterRequest(username, password, phone, "user", email, false, null)
+        val registerRequest = RegisterRequest(username, password, phone, "user", email, false)
 
         ApiClient.apiService.register(registerRequest).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {

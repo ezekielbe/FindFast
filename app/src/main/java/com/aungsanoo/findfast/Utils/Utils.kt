@@ -13,9 +13,14 @@ object Utils {
 
     fun logoutUserSession(context: Context) {
         val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
-        sharedPreferences
         val editor = sharedPreferences.edit()
         editor.remove("user_id")  // Remove the key-value pair
         editor.apply()
+    }
+
+    fun getUserID(context: Context): String? {
+        val sharedPreferences = context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null)
+        return userId
     }
 }

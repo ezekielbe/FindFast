@@ -4,18 +4,22 @@ import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.DeleteCartRequest
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterResponse
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserRequest
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -24,6 +28,12 @@ interface ApiService {
 
     @POST("login")
     fun login(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @GET("user/{user_id}")
+    fun getUser(@Path("user_id") userId: String): Call<UserResponse>
+
+    @PUT("user/{user_id}")
+    fun updateUser(@Path("user_id") userId: String, @Body user: UserRequest): Call<UserResponse>
 
     @GET("products")
     fun getProducts(): Call<List<Product>>
