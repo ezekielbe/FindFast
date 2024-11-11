@@ -3,16 +3,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/tvTransaction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profile Fragment" />
-
+        android:layout_marginTop="24dp"
+        android:text="Transaction Details"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
     <Button
         android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout" />
+        android:text="@string/logout"
+        android:backgroundTint="@color/primary"/>
 </LinearLayout>

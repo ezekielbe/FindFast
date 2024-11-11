@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from bson import ObjectId
 from datetime import datetime
-
 import json
 
 app = Flask(__name__)
@@ -29,7 +28,6 @@ def register():
     currentTime = datetime.utcnow()
     defaultAddress = data.get("defaultAddress")
 
-    # check if user exists
     user = users_collection.find_one({"username": username})
     if user:
         return jsonify({
@@ -37,14 +35,12 @@ def register():
             "message": "User Already exists!"
         }), 400
 
-    # Check if all fields are provided
     if not all([username, password, phone, role, isAdmin is not None]):
         return jsonify({
             "status": False,
             "message": "All fields are required: username, password, role, isAdmin, and wishlist."
         }), 400
 
-    # Insert new user
     new_user = {
         "username": username,
         "password": password,
@@ -76,7 +72,6 @@ def login():
     username = data.get("username")
     password = data.get("password")
 
-    # Fetch user data from MongoDB
     user = users_collection.find_one({"username": username, "password": password})
     if user:
         return jsonify({
@@ -137,17 +132,14 @@ def update_cart():
     if not all([user_id, product_id, quantity]):
         return jsonify({"status": False, "message": "Missing data"}), 400
 
-    # Check if an entry already exists for this user and product
     cart_item = db.cart.find_one({"user_id": user_id, "product_id": product_id})
 
     if cart_item:
-        # Update quantity if item exists in cart
         db.cart.update_one(
             {"user_id": user_id, "product_id": product_id},
             {"$set": {"quantity": quantity}}
         )
     else:
-        # Insert new item in cart if it doesn't exist
         db.cart.insert_one({
             "user_id": user_id,
             "product_id": product_id,
@@ -167,21 +159,24 @@ def get_cart_items():
     items = []
 
     for item in cart_items:
-        product_id = item["product_id"]
+        product_id = item.get("product_id")
         quantity = item.get("quantity", 1)
 
+        # Fetch product details for each cart item
         product = products_collection.find_one({"_id": ObjectId(product_id)})
 
         if product:
             items.append({
-                "productId": str(product["_id"]),
+                "user_id": user_id,  # Ensure user_id is included
+                "product_id": str(product["_id"]),  # Ensure product_id is included
                 "productName": product.get("name"),
                 "productPrice": product.get("price"),
                 "quantity": quantity
             })
         else:
             items.append({
-                "productId": product_id,
+                "user_id": user_id,  # Include user_id even if product is missing
+                "product_id": product_id,
                 "productName": None,
                 "productPrice": None,
                 "quantity": quantity
@@ -189,6 +184,63 @@ def get_cart_items():
 
     return jsonify(items), 200
 
+@app.route('/delete_cart_item', methods=['DELETE'])
+def delete_cart_item():
+    user_id = request.args.get("user_id")
+    product_id = request.args.get("product_id")
+
+    if not user_id or not product_id:
+        return jsonify({"status": False, "message": "User ID or Product ID missing"}), 400
+
+
+    db.cart.delete_one({"user_id": user_id, "product_id": product_id})
+
+    return jsonify({"status": True, "message": "Item removed from cart"}), 200
+
+
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    data = request.get_json()
+    user_id = data.get("user_id")
+
+    if not user_id:
+        return jsonify({"status": False, "message": "User ID not provided"}), 400
+
+    # Retrieve all items in the user's cart
+    cart_items = list(cart_collection.find({"user_id": user_id}))  # Convert cursor to list
+    if len(cart_items) == 0:
+        return jsonify({"status": False, "message": "No items in cart"}), 400
+
+    # Build the transaction details
+    products = []
+    total_amount = 0.0
+    for item in cart_items:
+        product_id = item["product_id"]
+        quantity = item["quantity"]
+
+        # Fetch product details
+        product = products_collection.find_one({"_id": ObjectId(product_id)})
+        if product:
+            products.append({
+                "id": str(product["_id"]),
+                "name": product["name"],
+                "quantity": quantity
+            })
+            total_amount += product["price"] * quantity
+
+    # Create a new transaction document
+    transaction = {
+        "user_id": user_id,
+        "products": products,
+        "checkout_date": datetime.utcnow(),
+        "total": total_amount
+    }
+    transactions_collection.insert_one(transaction)
+
+    # Clear the user's cart
+    cart_collection.delete_many({"user_id": user_id})
+
+    return jsonify({"status": True, "message": "Checkout successful", "transaction_id": str(transaction["_id"])}), 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
