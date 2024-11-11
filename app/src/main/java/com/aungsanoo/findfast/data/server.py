@@ -13,6 +13,7 @@ db = client.csis4280project
 users_collection = db.users
 products_collection = db.products
 transactions_collection = db.transactions
+cart_collection = db.cart
 #login
 from flask import jsonify, request
 
@@ -155,23 +156,21 @@ def update_cart():
 
     return jsonify({"status": True, "message": "Cart updated successfully"}), 200
 
+
 @app.route('/get_cart_items', methods=['GET'])
 def get_cart_items():
     user_id = request.args.get("user_id")
     if not user_id:
         return jsonify({"status": False, "message": "User ID not provided"}), 400
 
-    user = users_collection.find_one({"_id": ObjectId(user_id)})
-    if not user:
-        return jsonify({"status": False, "message": "User not found"}), 404
+    cart_items = cart_collection.find({"user_id": user_id})  # Retrieve all items for the user
 
-    cart_items = cart_collection.find({"user_id": ObjectId(user_id)})
     items = [
         {
             "productId": str(item["product_id"]),
-            "productName": item["product_name"],
-            "productPrice": item["product_price"],
-            "quantity": item["quantity"]
+            "productName": item.get("product_name"),
+            "productPrice": item.get("product_price"),
+            "quantity": item.get("quantity")
         }
         for item in cart_items
     ]

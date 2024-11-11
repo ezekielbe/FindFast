@@ -39,7 +39,7 @@ interface ApiService {
     ): Call<ResponseBody>
 
 
-    @GET("get_cart")
+    @GET("get_cart_items")
     fun getCartItems(@Query("user_id") userId: String): Call<List<CartItem>>
 
 }

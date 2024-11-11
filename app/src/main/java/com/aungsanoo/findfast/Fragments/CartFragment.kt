@@ -50,10 +50,9 @@ class CartFragment : Fragment() {
                         binding.cartRecyclerView.adapter = cartAdapter
                         updateTotalPrice(cartItems)
                     } else {
-                        Toast.makeText(requireContext(), "Failed to load cart items", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Failed to load cart items: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
 
                 override fun onFailure(call: Call<List<CartItem>>, t: Throwable) {
                     Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
@@ -65,9 +64,11 @@ class CartFragment : Fragment() {
     }
 
     private fun updateTotalPrice(cartItems: List<CartItem>) {
-        val total = cartItems.sumOf { it.productPrice ?: 0.0 * it.quantity }
+        val total: Double = cartItems.sumOf { (it.productPrice ?: 0.0) * it.quantity }
+
         binding.totalPrice.text = "$${String.format("%.2f", total)}"
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

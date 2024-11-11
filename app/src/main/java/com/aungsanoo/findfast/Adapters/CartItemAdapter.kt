@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.databinding.CartItemBinding
 
+// CartItemAdapter
 class CartItemAdapter(private val cartItems: List<CartItem>) : RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
 
     inner class CartItemViewHolder(private val binding: CartItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(cartItem: CartItem) {
             binding.productName.text = cartItem.productName
             binding.productQuantity.text = "Quantity: ${cartItem.quantity}"
-            binding.productPrice.text = "$${cartItem.productPrice}"
+            binding.productPrice.text = "$${String.format("%.2f", cartItem.productPrice ?: 0.0)}"
         }
     }
 
