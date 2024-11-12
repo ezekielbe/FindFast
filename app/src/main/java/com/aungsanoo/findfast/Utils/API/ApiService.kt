@@ -7,6 +7,7 @@ import com.aungsanoo.findfast.Utils.API.RequestResponseModels.DeleteCartRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserRequest
@@ -63,5 +64,10 @@ interface ApiService {
     @POST("checkout")
     fun checkout(@Body userId: Map<String, String>): Call<ResponseBody>
 
+    @PUT("products/{id}")
+    fun updateProduct(
+        @Path("id") productId: String,
+        @Body request: ProductUpdateRequest
+    ): Call<ResponseBody>
 
 }

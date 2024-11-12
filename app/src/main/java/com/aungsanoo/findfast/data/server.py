@@ -150,30 +150,16 @@ def update_user(user_id):
 
 @app.route('/products', methods=['GET'])
 def get_products():
-    name = request.args.get('name')
-    material = request.args.get('material')
-    price_range = request.args.get('priceRange')
-
-    query = {}
-
-    if name:
-        query['name'] = {'$regex': name, '$options': 'i'}  # case-insensitive search
-    if material:
-        query['material'] = material
-    if price_range:
-        min_price, max_price = map(float, price_range.split('-'))
-        query['price'] = {'$gte': min_price, '$lte': max_price}
-
     products = []
-    for product in products_collection.find(query):
+    for product in products_collection.find({}):
         products.append({
             "id": str(product["_id"]),
             "name": product["name"],
             "price": product["price"],
             "description": product["description"],
-            "material": product["material"],
-            "color": product.get("color", []),
-            "size": product.get("size", []),
+            "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
+            "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
+            "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
             "availability": product["availability"],
             "qty": product["qty"],
             "aisle": product["aisle"],
@@ -182,7 +168,6 @@ def get_products():
             "bin": product["bin"]
         })
     return jsonify(products), 200
-
 
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
@@ -303,6 +288,64 @@ def checkout():
     cart_collection.delete_many({"user_id": user_id})
 
     return jsonify({"status": True, "message": "Checkout successful", "transaction_id": str(transaction["_id"])}), 200
+
+
+
+@app.route('/products/<string:product_id>', methods=['GET'])
+def get_product_by_id(product_id):
+    try:
+        product = products_collection.find_one({"_id": ObjectId(product_id)})
+        if product:
+            product_data = {
+                "id": str(product["_id"]),
+                "name": product["name"],
+                "price": product["price"],
+                "description": product["description"],
+                "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
+                "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
+                "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
+                "availability": product["availability"],
+                "qty": product["qty"],
+                "aisle": product["aisle"],
+                "type": product["type"],
+                "shelf": product["shelf"],
+                "bin": product["bin"]
+            }
+            return jsonify(product_data), 200
+        else:
+            return jsonify({"status": False, "message": "Product not found"}), 404
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+
+@app.route('/products/<string:product_id>', methods=['PUT'])
+def update_product(product_id):
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"status": False, "message": "No data provided"}), 400
+
+    # Ensure material, color, and size fields are stored as lists
+    updated_fields = {
+        "name": data.get("name"),
+        "price": data.get("price"),
+        "description": data.get("description"),
+        "material": data.get("material") if isinstance(data.get("material"), list) else [data.get("material")],
+        "color": data.get("color") if isinstance(data.get("color"), list) else [data.get("color")],
+        "size": data.get("size") if isinstance(data.get("size"), list) else [data.get("size")],
+        "availability": data.get("availability"),
+    }
+
+    updated_fields = {k: v for k, v in updated_fields.items() if v is not None}
+
+    result = products_collection.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$set": updated_fields}
+    )
+
+    if result.matched_count > 0:
+        return jsonify({"status": True, "message": "Product updated successfully"}), 200
+    else:
+        return jsonify({"status": False, "message": "Product not found"}), 404
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
