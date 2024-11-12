@@ -8,4 +8,5 @@
     <color name="info">#FF0000FF</color>
     <color name="warning">#FFFFFF00</color>
     <color name="error">#A63A3A</color>
+    <color name="delete">#8B0000</color>
 </resources>

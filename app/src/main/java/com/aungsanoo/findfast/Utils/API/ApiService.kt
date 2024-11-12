@@ -3,10 +3,11 @@ package com.aungsanoo.findfast.Utils.API
 import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.DeleteCartRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductRequest
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserRequest
@@ -15,8 +16,6 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -63,5 +62,14 @@ interface ApiService {
     @POST("checkout")
     fun checkout(@Body userId: Map<String, String>): Call<ResponseBody>
 
+    @PUT("products/{id}")
+    fun updateProduct(
+        @Path("id") productId: String,
+        @Body request: ProductUpdateRequest
+    ): Call<ResponseBody>
+    @DELETE("products/{id}")
+    fun deleteProduct(@Path("id") productId: String): Call<ResponseBody>
+    @POST("products")
+    fun addProduct(@Body product: ProductRequest): Call<ResponseBody>
 
 }

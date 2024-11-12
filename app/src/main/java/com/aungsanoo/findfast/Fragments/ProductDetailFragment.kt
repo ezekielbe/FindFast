@@ -20,7 +20,7 @@ class ProductDetailFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
-    private var currentQty = 1
+    private var currentQty = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

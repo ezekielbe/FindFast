@@ -77,7 +77,12 @@ class LoginActivity : AppCompatActivity() {
 
                             Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
-                            val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+
+                            val intent = if (loginResponse.isAdmin == true) {
+                                Intent(this@LoginActivity, AdminDashboard::class.java)
+                            } else {
+                                Intent(this@LoginActivity, DashboardActivity::class.java)
+                            }
                             intent.putExtra("isAdmin", loginResponse.isAdmin)
                             startActivity(intent)
                             finish()
