@@ -63,6 +63,27 @@ class AdminProductDetailFragment : Fragment() {
         binding.saveUpdateBtn.setOnClickListener {
             updateProduct(productId)
         }
+        binding.deleteBtn.setOnClickListener{
+            deleteProduct(productId)
+        }
+    }
+
+    private fun deleteProduct(productId: String) {
+        ApiClient.apiService.deleteProduct(productId).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Product deleted successfully!", Toast.LENGTH_SHORT).show()
+                    // Optionally, navigate back or refresh the list
+                    parentFragmentManager.popBackStack()
+                } else {
+                    Toast.makeText(requireContext(), "Failed to delete product", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun updateProduct(productId: String) {

@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
                             Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 
-                            // Check if the user is an admin and direct accordingly
+
                             val intent = if (loginResponse.isAdmin == true) {
                                 Intent(this@LoginActivity, AdminDashboard::class.java)
                             } else {

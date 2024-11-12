@@ -346,6 +346,38 @@ def update_product(product_id):
         return jsonify({"status": True, "message": "Product updated successfully"}), 200
     else:
         return jsonify({"status": False, "message": "Product not found"}), 404
+@app.route('/products/<string:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    try:
+        result = products_collection.delete_one({"_id": ObjectId(product_id)})
+        if result.deleted_count > 0:
+            return jsonify({"status": True, "message": "Product deleted successfully"}), 200
+        else:
+            return jsonify({"status": False, "message": "Product not found"}), 404
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+@app.route('/products', methods=['POST'])
+def add_product():
+    data = request.get_json()
+    new_product = {
+        "name": data["name"],
+        "price": data["price"],
+        "description": data["description"],
+        "material": data["material"],
+        "color": data["color"],
+        "size": data["size"],
+        "availability": data["availability"],
+        "qty": data["qty"],
+        "aisle": data["aisle"],
+        "type": data["type"],
+        "shelf": data["shelf"],
+        "bin": data["bin"]
+    }
+    try:
+        products_collection.insert_one(new_product)
+        return jsonify({"status": True, "message": "Product added successfully"}), 201
+    except Exception as e:
+        return jsonify({"status": False, "message": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)

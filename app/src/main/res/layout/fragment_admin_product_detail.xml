@@ -141,16 +141,30 @@
     </LinearLayout>
 
     <!-- Save Update Button -->
+
     <Button
         android:id="@+id/saveUpdateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/primary"
         android:text="Save Update"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        android:backgroundTint="@color/primary"/>
+        app:layout_constraintVertical_bias="0.367" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/delete"
+        android:text="Delete Item"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/saveUpdateBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
