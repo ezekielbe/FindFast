@@ -124,16 +124,6 @@ class EditprofileFragment: Fragment() {
                             Toast.makeText(requireContext(), "User Profile Updated!", Toast.LENGTH_SHORT).show()
                             parentFragmentManager.setFragmentResult("profileUpdated", Bundle())
                             parentFragmentManager.popBackStack()
-//                            val userId = registerResponse.userId
-//                            if (userId != null) {
-//                                val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-//                                sharedPreferences.edit().putString("user_id", userId).apply()
-//                                Toast.makeText(this@RegisterActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
-//
-//                                val intent = Intent(this@RegisterActivity, DashboardActivity::class.java)
-//                                intent.putExtra("isAdmin", registerResponse.isAdmin)
-//                                startActivity(intent)
-//                            }
                         } else {
                             Toast.makeText(requireContext(), "User Profile Update failed: ${userResponse?.message}", Toast.LENGTH_SHORT).show()
                             userResponse?.message?.let { renderError(it) }

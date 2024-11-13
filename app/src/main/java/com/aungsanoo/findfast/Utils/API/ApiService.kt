@@ -2,6 +2,7 @@ package com.aungsanoo.findfast.Utils.API
 
 import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.Models.Product
+import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
@@ -72,4 +73,6 @@ interface ApiService {
     @POST("products")
     fun addProduct(@Body product: ProductRequest): Call<ResponseBody>
 
+    @GET("transactions/{id}")
+    fun transactionsByUser(@Path("id") userId: String): Call<List<Transaction>>
 }
