@@ -53,6 +53,8 @@ class ProfileFragment: Fragment() {
 
         handleEditProfileButton()
 
+        handleOrderHistoryButton()
+
         handleLogoutButton()
     }
 
@@ -104,6 +106,21 @@ class ProfileFragment: Fragment() {
             editProfileFragment.arguments = bundle
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, editProfileFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    fun handleOrderHistoryButton() {
+        binding.btnOrderHistory.setOnClickListener{
+            val orderHistoryFragment = OrderHistoryFragment()
+
+            val bundle = Bundle()
+            bundle.putString("id", userData?._id)
+            orderHistoryFragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, orderHistoryFragment)
                 .addToBackStack(null)
                 .commit()
         }

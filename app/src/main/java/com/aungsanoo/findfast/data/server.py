@@ -379,5 +379,25 @@ def add_product():
     except Exception as e:
         return jsonify({"status": False, "message": str(e)}), 500
 
+# Get all transactions for report
+@app.route('/transactions', methods=['GET'])
+def transactions():
+    try:
+        transactions = transactions_collection.find({}, {"_id": 0})
+        transaction_list = list(transactions)
+        return jsonify(transaction_list), 200
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+
+# Get transactions of a user
+@app.route('/transactions/<string:user_id>', methods=['GET'])
+def transactions_by_user(user_id):
+    try:
+        transactions = transactions_collection.find({"user_id": user_id}, {"_id": 0})
+        transaction_list = list(transactions)
+        return jsonify(transaction_list), 200
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
