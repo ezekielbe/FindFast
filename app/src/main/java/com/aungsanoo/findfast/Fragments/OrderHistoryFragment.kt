@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.aungsanoo.findfast.Adapters.Listeners.OnOrderDetailsClickListener
 import com.aungsanoo.findfast.Adapters.TransactionAdapter
 import com.aungsanoo.findfast.Models.Transaction
+import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.FragmentOrderHistoryBinding
@@ -16,7 +18,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class OrderHistoryFragment: Fragment() {
+class OrderHistoryFragment: Fragment(), OnOrderDetailsClickListener {
     private lateinit var binding: FragmentOrderHistoryBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +58,7 @@ class OrderHistoryFragment: Fragment() {
                         val transactionList = response.body()
                         if (transactionList?.isNotEmpty() == true) {
                             showPurchases(true)
-                            binding.purchaseRecyclerView.adapter = TransactionAdapter(transactionList)
+                            binding.purchaseRecyclerView.adapter = TransactionAdapter(transactionList, this@OrderHistoryFragment)
                         } else {
                             showPurchases(false)
                             Toast.makeText(requireContext(), "There is no purchase history", Toast.LENGTH_SHORT).show()
@@ -84,5 +86,20 @@ class OrderHistoryFragment: Fragment() {
         binding.btnBack.setOnClickListener{
             parentFragmentManager.popBackStack()
         }
+    }
+
+    override fun onOrderDetailClick(transaction: Transaction) {
+        val orderDetailsFragment = OrderDetailsFragment()
+
+        val bundle = Bundle().apply {
+            putParcelable("transaction", transaction)
+        }
+
+        orderDetailsFragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, orderDetailsFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

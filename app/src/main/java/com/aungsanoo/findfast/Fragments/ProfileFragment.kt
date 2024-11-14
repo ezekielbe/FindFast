@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Activities.DashboardActivity
 import com.aungsanoo.findfast.Activities.LoginActivity
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
@@ -54,6 +55,8 @@ class ProfileFragment: Fragment() {
         handleEditProfileButton()
 
         handleOrderHistoryButton()
+
+        handleCartButton()
 
         handleLogoutButton()
     }
@@ -123,6 +126,12 @@ class ProfileFragment: Fragment() {
                 .replace(R.id.fragmentContainer, orderHistoryFragment)
                 .addToBackStack(null)
                 .commit()
+        }
+    }
+
+    fun handleCartButton() {
+        binding.btnCart.setOnClickListener{
+            (activity as? DashboardActivity)?.setMenu(R.id.cartFragment)
         }
     }
 

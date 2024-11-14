@@ -11,10 +11,11 @@ import com.aungsanoo.findfast.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class DashboardActivity : AppCompatActivity() {
+    lateinit var bottomNavigationView: BottomNavigationView
 
     private lateinit var homeFragment: HomeFragment
     private lateinit var searchFragment: SearchFragment
-    private lateinit var transactionsFragment: TransactionsFragment
+    private lateinit var cartFragment: CartFragment
     private lateinit var profileFragment: ProfileFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +29,11 @@ class DashboardActivity : AppCompatActivity() {
             insets
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationContainer)
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationContainer)
 
         homeFragment = HomeFragment()
         searchFragment = SearchFragment()
-        transactionsFragment = TransactionsFragment()
+        cartFragment = CartFragment()
         profileFragment = ProfileFragment()
 
         if (savedInstanceState == null) {
@@ -45,7 +46,7 @@ class DashboardActivity : AppCompatActivity() {
             val selectedFragment: Fragment? = when (menuItem.itemId) {
                 R.id.homeFragment -> homeFragment
                 R.id.searchFragment -> searchFragment
-                R.id.cartFragment -> CartFragment()
+                R.id.cartFragment -> cartFragment
                 R.id.profileFragment -> profileFragment
                 else -> null
             }
@@ -62,5 +63,9 @@ class DashboardActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    fun setMenu(id: Int) {
+        bottomNavigationView.selectedItemId = id
     }
 }
