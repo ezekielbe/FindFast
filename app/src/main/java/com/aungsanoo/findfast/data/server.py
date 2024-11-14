@@ -271,7 +271,8 @@ def checkout():
             products.append({
                 "id": str(product["_id"]),
                 "name": product["name"],
-                "quantity": quantity
+                "quantity": quantity,
+                "price": product["price"]
             })
             total_amount += product["price"] * quantity
 

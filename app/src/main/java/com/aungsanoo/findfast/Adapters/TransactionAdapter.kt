@@ -5,11 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.aungsanoo.findfast.Adapters.Listeners.OnOrderDetailsClickListener
 import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.TransactionItemBinding
 
-class TransactionAdapter(private val tnxList: List<Transaction>) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
+class TransactionAdapter(private val tnxList: List<Transaction>, private val listener: OnOrderDetailsClickListener) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -38,6 +39,7 @@ class TransactionAdapter(private val tnxList: List<Transaction>) : RecyclerView.
             binding.tvTotal.text = "Total: $ ${transaction.total}"
 
             binding.btnTransactionDetails.setOnClickListener{
+                listener.onOrderDetailClick(transaction)
             }
         }
     }
