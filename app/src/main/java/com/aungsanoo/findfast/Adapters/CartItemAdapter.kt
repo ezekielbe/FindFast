@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aungsanoo.findfast.Models.CartItem
+import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.databinding.CartItemBinding
+import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,8 +27,14 @@ class CartItemAdapter(
             binding.productName.text = cartItem.productName
             binding.productQuantity.text = "${cartItem.quantity}"
             binding.productPrice.text = "$${String.format("%.2f", cartItem.productPrice ?: 0.0)}"
-
-            // Set up delete button click listener
+            val productImageUrl = cartItem.productImageUrl
+            if(!productImageUrl.isNullOrEmpty()){
+                Picasso.get()
+                    .load(productImageUrl)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .into(binding.productImage)
+            }
             binding.imageView.setOnClickListener {
                 deleteCartItem(cartItem)
             }

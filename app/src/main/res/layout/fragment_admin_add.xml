@@ -2,67 +2,97 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">>
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Product Header -->
+        <TextView
+            android:id="@+id/productHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Add New Product"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Product Image Link -->
+        <EditText
+            android:id="@+id/productImageLink"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Enter Product Image Link"
+            android:padding="8dp"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/productHeader"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Product Name -->
         <EditText
             android:id="@+id/productName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Product Name"
+            android:layout_marginTop="16dp"
+            android:hint="Enter Product Name"
+            android:padding="8dp"
             android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/productImageLink"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Product Price -->
         <EditText
             android:id="@+id/productPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:hint="Enter Price"
             android:inputType="numberDecimal"
+            android:padding="8dp"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/productName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productName" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Product Description -->
         <EditText
             android:id="@+id/productDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:hint="Enter Product Description"
             android:padding="8dp"
             android:textColor="@android:color/darker_gray"
             android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/productPrice"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productPrice" />
+            app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Material, Color, Size -->
         <EditText
             android:id="@+id/productMaterial"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:hint="Enter Material"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productDescription" />
-
+            app:layout_constraintTop_toBottomOf="@id/productDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/productColor"
@@ -70,10 +100,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter Color"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productMaterial" />
-
+            app:layout_constraintTop_toBottomOf="@id/productMaterial"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/productSize"
@@ -81,38 +112,42 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter Size"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productColor" />
+            app:layout_constraintTop_toBottomOf="@id/productColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Availability -->
         <EditText
             android:id="@+id/productAvailability"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:hint="Enter Availability (e.g., In Stock)"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productSize" />
+            app:layout_constraintTop_toBottomOf="@id/productSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Quantity Selector -->
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+            android:id="@+id/quantityLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/productAvailability"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productAvailability">
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/qtyLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:text="Quantity:"
                 android:textSize="16sp" />
 
@@ -120,7 +155,7 @@
                 android:id="@+id/decreaseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:backgroundTint="@color/primary"
                 android:text="-"
                 android:textSize="18sp" />
@@ -139,20 +174,24 @@
                 android:id="@+id/increaseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:backgroundTint="@color/primary"
                 android:text="+"
                 android:textSize="18sp" />
         </LinearLayout>
+
+        <!-- Aisle, Type, Shelf, Bin -->
         <EditText
             android:id="@+id/productAisle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:hint="Enter Aisle"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@id/quantityLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/productType"
@@ -160,9 +199,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter Type"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productAisle" />
+            app:layout_constraintTop_toBottomOf="@id/productAisle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/productShelf"
@@ -170,9 +211,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter Shelf"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productType" />
+            app:layout_constraintTop_toBottomOf="@id/productType"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <EditText
             android:id="@+id/productBin"
@@ -180,25 +223,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Enter Bin"
+            android:padding="8dp"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/productShelf" />
+            app:layout_constraintTop_toBottomOf="@id/productShelf"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-
+        <!-- Add Product Button -->
         <Button
             android:id="@+id/addItemButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
             android:backgroundTint="@color/primary"
             android:text="Add Item"
             android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/productBin"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/productBin"
-            app:layout_constraintVertical_bias="0.0" />
-
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

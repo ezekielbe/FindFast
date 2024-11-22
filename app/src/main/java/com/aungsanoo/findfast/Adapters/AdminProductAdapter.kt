@@ -9,14 +9,24 @@ import com.aungsanoo.findfast.Fragments.AdminProductDetailFragment
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
+import com.squareup.picasso.Picasso
 
 class AdminProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
     RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
 
     inner class AdminProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductBinding.bind(itemView)
-
         fun bind(product: Product) {
+            if(product.imageUrl?.isNotEmpty() == true){
+                Picasso.get()
+                    .load(product.imageUrl)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .into(binding.productImage)
+            }else{
+                binding.productImage.setImageResource(R.drawable.logo)
+            }
+            binding.productImage.setImageResource(R.drawable.logo)
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description

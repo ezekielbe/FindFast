@@ -19,6 +19,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Product Image (New ImageView added below Product Name) -->
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productName" />
+
     <!-- Product Price (Editable) -->
     <EditText
         android:id="@+id/productPrice"
@@ -31,7 +43,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productName" />
+        app:layout_constraintTop_toBottomOf="@id/productImage" />
 
     <!-- Product Description (Editable) -->
     <EditText
@@ -141,7 +153,6 @@
     </LinearLayout>
 
     <!-- Save Update Button -->
-
     <Button
         android:id="@+id/saveUpdateBtn"
         android:layout_width="wrap_content"
@@ -155,6 +166,7 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
         app:layout_constraintVertical_bias="0.367" />
 
+    <!-- Delete Button -->
     <Button
         android:id="@+id/deleteBtn"
         android:layout_width="wrap_content"

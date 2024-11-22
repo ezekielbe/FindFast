@@ -9,6 +9,7 @@ import com.aungsanoo.findfast.Fragments.ProductDetailFragment
 import androidx.fragment.app.FragmentActivity
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
+import com.squareup.picasso.Picasso
 
 class ProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -20,7 +21,13 @@ class ProductAdapter(private val productList: List<Product>, private val activit
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
-
+            if (!product.imageUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(product.imageUrl)
+                    .placeholder(R.drawable.logo) // Replace with an appropriate placeholder
+                    .error(R.drawable.logo) // Replace with an appropriate error image
+                    .into(binding.productImage)
+            }
             itemView.setOnClickListener {
                 val fragment = ProductDetailFragment.newInstance(
                     productName = product.name,

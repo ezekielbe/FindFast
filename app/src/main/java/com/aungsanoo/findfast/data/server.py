@@ -165,7 +165,9 @@ def get_products():
             "aisle": product["aisle"],
             "type": product["type"],
             "shelf": product["shelf"],
-            "bin": product["bin"]
+            "bin": product["bin"],
+            "imageUrl": product.get("imageUrl","")
+
         })
     return jsonify(products), 200
 
@@ -179,19 +181,33 @@ def update_cart():
     if not all([user_id, product_id, quantity]):
         return jsonify({"status": False, "message": "Missing data"}), 400
 
-    cart_item = db.cart.find_one({"user_id": user_id, "product_id": product_id})
+    # Fetch product details
+    product = products_collection.find_one({"_id": ObjectId(product_id)})
+
+    if not product:
+        return jsonify({"status": False, "message": "Product not found"}), 404
+
+    cart_item = cart_collection.find_one({"user_id": user_id, "product_id": product_id})
+
+    # Prepare the product data to be saved in the cart
+    product_data = {
+        "user_id": user_id,
+        "product_id": product_id,
+        "quantity": quantity,
+        "productName": product["name"],
+        "productPrice": product["price"],
+        "imageUrl": product.get("imageUrl", "")
+    }
 
     if cart_item:
-        db.cart.update_one(
+        # Update existing cart item with new quantity and updated product details
+        cart_collection.update_one(
             {"user_id": user_id, "product_id": product_id},
-            {"$set": {"quantity": quantity}}
+            {"$set": product_data}
         )
     else:
-        db.cart.insert_one({
-            "user_id": user_id,
-            "product_id": product_id,
-            "quantity": quantity
-        })
+        # Insert new cart item
+        cart_collection.insert_one(product_data)
 
     return jsonify({"status": True, "message": "Cart updated successfully"}), 200
 
@@ -218,7 +234,8 @@ def get_cart_items():
                 "product_id": str(product["_id"]),  # Ensure product_id is included
                 "productName": product.get("name"),
                 "productPrice": product.get("price"),
-                "quantity": quantity
+                "quantity": quantity,
+                "imageUrl": product.get("productImageUrl","")
             })
         else:
             items.append({
@@ -226,7 +243,8 @@ def get_cart_items():
                 "product_id": product_id,
                 "productName": None,
                 "productPrice": None,
-                "quantity": quantity
+                "quantity": quantity,
+                "imageUrl": None
             })
 
     return jsonify(items), 200
@@ -310,7 +328,8 @@ def get_product_by_id(product_id):
                 "aisle": product["aisle"],
                 "type": product["type"],
                 "shelf": product["shelf"],
-                "bin": product["bin"]
+                "bin": product["bin"],
+                "imageUrl": product("imageUrl","")
             }
             return jsonify(product_data), 200
         else:
@@ -360,6 +379,9 @@ def delete_product(product_id):
 @app.route('/products', methods=['POST'])
 def add_product():
     data = request.get_json()
+    print("Received data:", data)  # Add this to ensure you're receiving the correct data.
+    if "imageUrl" not in data or data["imageUrl"] is None:
+        print("Warning: imageUrl is missing or null.")
     new_product = {
         "name": data["name"],
         "price": data["price"],
@@ -372,7 +394,8 @@ def add_product():
         "aisle": data["aisle"],
         "type": data["type"],
         "shelf": data["shelf"],
-        "bin": data["bin"]
+        "bin": data["bin"],
+        "imageUrl": data.get("imageUrl")
     }
     try:
         products_collection.insert_one(new_product)

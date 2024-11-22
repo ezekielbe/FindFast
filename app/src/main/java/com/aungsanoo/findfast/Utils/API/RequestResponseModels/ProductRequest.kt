@@ -12,5 +12,6 @@ data class ProductRequest(
     val aisle: String,
     val type: String,
     val shelf: String,
-    val bin: String
+    val bin: String,
+    val imageUrl: String
 )
