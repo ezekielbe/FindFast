@@ -181,7 +181,6 @@ def update_cart():
     if not all([user_id, product_id, quantity]):
         return jsonify({"status": False, "message": "Missing data"}), 400
 
-    # Fetch product details
     product = products_collection.find_one({"_id": ObjectId(product_id)})
 
     if not product:
@@ -189,24 +188,22 @@ def update_cart():
 
     cart_item = cart_collection.find_one({"user_id": user_id, "product_id": product_id})
 
-    # Prepare the product data to be saved in the cart
+
     product_data = {
         "user_id": user_id,
         "product_id": product_id,
         "quantity": quantity,
         "productName": product["name"],
         "productPrice": product["price"],
-        "imageUrl": product.get("imageUrl", "")
+        "productImageUrl": product.get("imageUrl", "")
     }
 
     if cart_item:
-        # Update existing cart item with new quantity and updated product details
         cart_collection.update_one(
             {"user_id": user_id, "product_id": product_id},
             {"$set": product_data}
         )
     else:
-        # Insert new cart item
         cart_collection.insert_one(product_data)
 
     return jsonify({"status": True, "message": "Cart updated successfully"}), 200
@@ -225,26 +222,25 @@ def get_cart_items():
         product_id = item.get("product_id")
         quantity = item.get("quantity", 1)
 
-        # Fetch product details for each cart item
         product = products_collection.find_one({"_id": ObjectId(product_id)})
 
         if product:
             items.append({
-                "user_id": user_id,  # Ensure user_id is included
-                "product_id": str(product["_id"]),  # Ensure product_id is included
+                "user_id": user_id,
+                "product_id": str(product["_id"]),
                 "productName": product.get("name"),
                 "productPrice": product.get("price"),
                 "quantity": quantity,
-                "imageUrl": product.get("productImageUrl","")
+                "productImageUrl": product.get("imageUrl","")
             })
         else:
             items.append({
-                "user_id": user_id,  # Include user_id even if product is missing
+                "user_id": user_id,
                 "product_id": product_id,
                 "productName": None,
                 "productPrice": None,
                 "quantity": quantity,
-                "imageUrl": None
+                "productImageUrl": None
             })
 
     return jsonify(items), 200

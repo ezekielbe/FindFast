@@ -27,12 +27,11 @@ class CartItemAdapter(
             binding.productName.text = cartItem.productName
             binding.productQuantity.text = "${cartItem.quantity}"
             binding.productPrice.text = "$${String.format("%.2f", cartItem.productPrice ?: 0.0)}"
-            val productImageUrl = cartItem.productImageUrl
-            if(!productImageUrl.isNullOrEmpty()){
+            if (!cartItem.productImageUrl.isNullOrEmpty()) {
                 Picasso.get()
-                    .load(productImageUrl)
-                    .placeholder(R.drawable.logo)
-                    .error(R.drawable.logo)
+                    .load(cartItem.productImageUrl)
+                    .placeholder(R.drawable.logo) // Replace with an appropriate placeholder
+                    .error(R.drawable.logo) // Replace with an appropriate error image
                     .into(binding.productImage)
             }
             binding.imageView.setOnClickListener {

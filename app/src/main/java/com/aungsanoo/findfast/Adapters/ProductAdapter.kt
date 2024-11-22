@@ -37,7 +37,8 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     productColor = product.color.joinToString(", "),
                     productSize = product.size.joinToString(", "),
                     productAvailability = product.availability,
-                    productId = product.id
+                    productId = product.id,
+                    productImageUrl = product.imageUrl?: ""
                 )
 
                 activity.supportFragmentManager.beginTransaction()

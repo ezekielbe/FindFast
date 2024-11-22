@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.databinding.FragmentProductDetailBinding
+import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +22,7 @@ class ProductDetailFragment : Fragment() {
 
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding!!
-    private var currentQty = 0
+    private var currentQty = 1  // Set initial quantity to 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +46,10 @@ class ProductDetailFragment : Fragment() {
         val productColor = arguments?.getString("productColor")
         val productSize = arguments?.getString("productSize")
         val productAvailability = arguments?.getBoolean("productAvailability")
+        val productImageUrl = arguments?.getString("productImageUrl")
+
         binding.productName.text = productName
-        binding.productPrice.text = productPrice.toString()
+        binding.productPrice.text = String.format("$%.2f", productPrice ?: 0.0)
         binding.productDescription.text = productDescription
         binding.productMaterial.text = productMaterial
         binding.productColor.text = productColor
@@ -53,7 +57,14 @@ class ProductDetailFragment : Fragment() {
         binding.productAvailability.text = if (productAvailability == true) "Available" else "Out of Stock"
         binding.qtyTxt.text = currentQty.toString()
 
-        binding.qtyTxt.text = currentQty.toString()
+        // Load the product image using Picasso
+        if (!productImageUrl.isNullOrEmpty()) {
+            Picasso.get()
+                .load(productImageUrl)
+                .placeholder(R.drawable.logo)  // Replace with your placeholder drawable
+                .error(R.drawable.logo)  // Replace with your error drawable
+                .into(binding.productImage)
+        }
 
         binding.increaseBtn.setOnClickListener {
             currentQty++
@@ -115,7 +126,8 @@ class ProductDetailFragment : Fragment() {
             productColor: String,
             productSize: String,
             productAvailability: Boolean,
-            productId: String
+            productId: String,
+            productImageUrl: String
         ) = ProductDetailFragment().apply {
             arguments = Bundle().apply {
                 putString("productName", productName)
@@ -126,6 +138,7 @@ class ProductDetailFragment : Fragment() {
                 putString("productSize", productSize)
                 putBoolean("productAvailability", productAvailability)
                 putString("productId", productId)
+                putString("productImageUrl", productImageUrl)
             }
         }
     }
