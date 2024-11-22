@@ -9,6 +9,8 @@ import com.aungsanoo.findfast.Fragments.ProductDetailFragment
 import androidx.fragment.app.FragmentActivity
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.squareup.picasso.Picasso
 
 class ProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
@@ -22,10 +24,11 @@ class ProductAdapter(private val productList: List<Product>, private val activit
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
             if (!product.imageUrl.isNullOrEmpty()) {
-                Picasso.get()
+                Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
-                    .placeholder(R.drawable.logo) // Replace with an appropriate placeholder
-                    .error(R.drawable.logo) // Replace with an appropriate error image
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
                     .into(binding.productImage)
             }
             itemView.setOnClickListener {

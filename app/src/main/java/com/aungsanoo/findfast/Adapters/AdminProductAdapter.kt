@@ -9,6 +9,8 @@ import com.aungsanoo.findfast.Fragments.AdminProductDetailFragment
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.squareup.picasso.Picasso
 
 class AdminProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
@@ -18,15 +20,16 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
         private val binding = ProductBinding.bind(itemView)
         fun bind(product: Product) {
             if(product.imageUrl?.isNotEmpty() == true){
-                Picasso.get()
+                Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
-                    .placeholder(R.drawable.logo)
-                    .error(R.drawable.logo)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
                     .into(binding.productImage)
             }else{
-                binding.productImage.setImageResource(R.drawable.logo)
+                binding.productImage.setImageResource(R.drawable.nopic)
             }
-            binding.productImage.setImageResource(R.drawable.logo)
+            binding.productImage.setImageResource(R.drawable.nopic)
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
