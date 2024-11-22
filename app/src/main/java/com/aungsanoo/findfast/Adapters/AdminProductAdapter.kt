@@ -11,7 +11,6 @@ import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.squareup.picasso.Picasso
 
 class AdminProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
     RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
@@ -19,26 +18,31 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
     inner class AdminProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductBinding.bind(itemView)
         fun bind(product: Product) {
-            if(product.imageUrl?.isNotEmpty() == true){
+            // Set product image using Glide
+            if (product.imageUrl?.isNotEmpty() == true) {
                 Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .placeholder(R.drawable.nopic)
                     .error(R.drawable.nopic)
                     .into(binding.productImage)
-            }else{
+            } else {
                 binding.productImage.setImageResource(R.drawable.nopic)
             }
-            binding.productImage.setImageResource(R.drawable.nopic)
+
+            // Set product details to UI
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
 
-
+            // Set click listener for navigating to detail fragment
             itemView.setOnClickListener {
+                println("Product Clicked - ID: ${product.id}, Base Price: ${product.basePrice}") // Add log for debugging
+
                 val fragment = AdminProductDetailFragment.newInstance(
                     productId = product.id,
                     productName = product.name,
+                    basePrice = product.basePrice,
                     productPrice = product.price,
                     productDescription = product.description,
                     productMaterial = product.material.joinToString(", "),

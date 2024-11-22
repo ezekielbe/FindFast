@@ -3,180 +3,191 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <!-- Product Name (Display Only) -->
-    <TextView
-        android:id="@+id/productName"
+    <!-- ScrollView to make the whole form scrollable -->
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Product Name"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Product Image (New ImageView added below Product Name) -->
-    <ImageView
-        android:id="@+id/productImage"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="12dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/nopic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productName" />
-
-    <!-- Product Price (Editable) -->
-    <EditText
-        android:id="@+id/productPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:hint="Enter Price"
-        android:inputType="numberDecimal"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productImage" />
-
-    <!-- Product Description (Editable) -->
-    <EditText
-        android:id="@+id/productDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:padding="8dp"
-        android:hint="Enter Product Description"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productPrice" />
-
-    <!-- Material (Editable) -->
-    <EditText
-        android:id="@+id/productMaterial"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Enter Material"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productDescription" />
-
-    <!-- Color (Editable) -->
-    <EditText
-        android:id="@+id/productColor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter Color"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productMaterial" />
-
-    <!-- Size (Editable) -->
-    <EditText
-        android:id="@+id/productSize"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Enter Size"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productColor" />
-
-    <!-- Availability (Editable) -->
-    <EditText
-        android:id="@+id/productAvailability"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Enter Availability (e.g., In Stock)"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productSize" />
-
-    <!-- Quantity Selector -->
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productAvailability">
-
-        <TextView
-            android:id="@+id/qtyLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            android:text="Quantity:"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/decreaseBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="-"
-            android:textSize="18sp"
-            android:backgroundTint="@color/primary"/>
-
-        <TextView
-            android:id="@+id/qtyTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="1"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/increaseBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="+"
-            android:textSize="18sp"
-            android:backgroundTint="@color/primary"/>
-    </LinearLayout>
-
-    <!-- Save Update Button -->
-    <Button
-        android:id="@+id/saveUpdateBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/primary"
-        android:text="Save Update"
-        android:textSize="18sp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.367" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Delete Button -->
-    <Button
-        android:id="@+id/deleteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/delete"
-        android:text="Delete Item"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveUpdateBtn" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Product Name (Display Only) -->
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Product Name"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Product Image -->
+            <ImageView
+                android:id="@+id/productImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/nopic" />
+
+            <!-- Image Link (Input Field) -->
+            <EditText
+                android:id="@+id/imageLink"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Image URL"
+                android:inputType="textUri"
+                android:textSize="16sp" />
+
+            <!-- Base Price (Editable) -->
+            <EditText
+                android:id="@+id/basePrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Base Price"
+                android:inputType="numberDecimal"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="18sp" />
+
+            <!-- Product Price (Editable Selling Price) -->
+            <EditText
+                android:id="@+id/productPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="Enter Selling Price"
+                android:inputType="numberDecimal"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="18sp" />
+
+            <!-- Product Description (Editable) -->
+            <EditText
+                android:id="@+id/productDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:padding="8dp"
+                android:hint="Enter Product Description"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="16sp" />
+
+            <!-- Material (Editable) -->
+            <EditText
+                android:id="@+id/productMaterial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Enter Material"
+                android:textSize="16sp" />
+
+            <!-- Color (Editable) -->
+            <EditText
+                android:id="@+id/productColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Color"
+                android:textSize="16sp" />
+
+            <!-- Size (Editable) -->
+            <EditText
+                android:id="@+id/productSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Enter Size"
+                android:textSize="16sp" />
+
+            <!-- Availability (Editable) -->
+            <EditText
+                android:id="@+id/productAvailability"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:hint="Enter Availability (e.g., In Stock)"
+                android:textSize="16sp" />
+
+            <!-- Quantity Selector -->
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/qtyLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3"
+                    android:text="Quantity:"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/decreaseBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="-"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/primary" />
+
+                <TextView
+                    android:id="@+id/qtyTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/increaseBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="+"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/primary" />
+            </LinearLayout>
+
+            <!-- Save Update Button -->
+            <Button
+                android:id="@+id/saveUpdateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/primary"
+                android:layout_marginTop="16dp"
+                android:text="Save Update"
+                android:textSize="18sp" />
+
+            <!-- Delete Button -->
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/delete"
+                android:text="Delete Item"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

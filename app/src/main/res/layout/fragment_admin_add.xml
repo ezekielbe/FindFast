@@ -52,18 +52,33 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Product Base Price -->
+        <EditText
+            android:id="@+id/productBasePrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Enter Base Price"
+            android:inputType="numberDecimal"
+            android:padding="8dp"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/productName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <!-- Product Price -->
         <EditText
             android:id="@+id/productPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="Enter Price"
+            android:hint="Enter Selling Price"
             android:inputType="numberDecimal"
             android:padding="8dp"
             android:textColor="@android:color/holo_green_dark"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/productName"
+            app:layout_constraintTop_toBottomOf="@id/productBasePrice"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

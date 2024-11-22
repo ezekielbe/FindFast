@@ -31,6 +31,7 @@ class AdminProductDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Extract arguments
         val productId = arguments?.getString("productId") ?: ""
         val productName = arguments?.getString("productName") ?: ""
         val productPrice = arguments?.getDouble("productPrice") ?: 0.0
@@ -39,7 +40,11 @@ class AdminProductDetailFragment : Fragment() {
         val productColor = arguments?.getString("productColor") ?: ""
         val productSize = arguments?.getString("productSize") ?: ""
         val productAvailability = arguments?.getString("productAvailability") ?: "false"
+        val productBasePrice = arguments?.getDouble("productBasePrice") ?: 0.0  // Retrieve basePrice
 
+        println("Base Price retrieved in onViewCreated: $productBasePrice") // Log basePrice
+
+        // Set values to UI components
         binding.productName.setText(productName)
         binding.productPrice.setText(productPrice.toString())
         binding.productDescription.setText(productDescription)
@@ -47,7 +52,9 @@ class AdminProductDetailFragment : Fragment() {
         binding.productColor.setText(productColor)
         binding.productSize.setText(productSize)
         binding.productAvailability.setText(productAvailability)
+        binding.basePrice.setText(productBasePrice.toString())  // Set basePrice to EditText
 
+        // Setup button click listeners
         binding.increaseBtn.setOnClickListener {
             currentQty++
             binding.qtyTxt.text = currentQty.toString()
@@ -63,7 +70,8 @@ class AdminProductDetailFragment : Fragment() {
         binding.saveUpdateBtn.setOnClickListener {
             updateProduct(productId)
         }
-        binding.deleteBtn.setOnClickListener{
+
+        binding.deleteBtn.setOnClickListener {
             deleteProduct(productId)
         }
     }
@@ -73,7 +81,6 @@ class AdminProductDetailFragment : Fragment() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Product deleted successfully!", Toast.LENGTH_SHORT).show()
-                    // Optionally, navigate back or refresh the list
                     parentFragmentManager.popBackStack()
                 } else {
                     Toast.makeText(requireContext(), "Failed to delete product", Toast.LENGTH_SHORT).show()
@@ -94,10 +101,12 @@ class AdminProductDetailFragment : Fragment() {
         val updatedColor = binding.productColor.text.toString()
         val updatedSize = binding.productSize.text.toString()
         val updatedAvailability = binding.productAvailability.text.toString().equals("Available", ignoreCase = true)
+        val updatedBasePrice = binding.basePrice.text.toString().toDoubleOrNull() ?: 0.0
 
         val updateRequest = ProductUpdateRequest(
             productId = productId,
             name = updatedName,
+            basePrice = updatedBasePrice,
             price = updatedPrice,
             description = updatedDescription,
             material = updatedMaterial,
@@ -136,7 +145,8 @@ class AdminProductDetailFragment : Fragment() {
             productMaterial: String,
             productColor: String,
             productSize: String,
-            productAvailability: String
+            productAvailability: String,
+            basePrice: Double
         ) = AdminProductDetailFragment().apply {
             arguments = Bundle().apply {
                 putString("productId", productId)
@@ -147,6 +157,7 @@ class AdminProductDetailFragment : Fragment() {
                 putString("productColor", productColor)
                 putString("productSize", productSize)
                 putString("productAvailability", productAvailability)
+                putDouble("productBasePrice", basePrice)  // Add basePrice to arguments
             }
         }
     }
