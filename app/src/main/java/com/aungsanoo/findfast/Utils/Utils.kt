@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.core.content.ContextCompat
+import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -75,4 +76,13 @@ object Utils {
             return null
         }
     }
+
+    fun getInProgressOrders(transactionList: List<Transaction>): List<Transaction> {
+        return transactionList.filter { it.status in 0..2 }
+    }
+
+    fun getDeliveredOrders(transactionList: List<Transaction>): List<Transaction> {
+        return transactionList.filter { it.status == 3 }
+    }
+
 }
