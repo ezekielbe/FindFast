@@ -4,6 +4,7 @@ data class Product(
     val id: String,
     val name: String,
     val price: Double,
+    val basePrice: Double,
     val description: String,
     val material: Array<String>,
     val color: Array<String>,

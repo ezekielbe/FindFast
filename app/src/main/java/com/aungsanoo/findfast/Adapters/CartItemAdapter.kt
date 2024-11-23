@@ -10,6 +10,8 @@ import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.databinding.CartItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.squareup.picasso.Picasso
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -28,10 +30,11 @@ class CartItemAdapter(
             binding.productQuantity.text = "${cartItem.quantity}"
             binding.productPrice.text = "$${String.format("%.2f", cartItem.productPrice ?: 0.0)}"
             if (!cartItem.productImageUrl.isNullOrEmpty()) {
-                Picasso.get()
+                Glide.with(binding.productImage.context)
                     .load(cartItem.productImageUrl)
-                    .placeholder(R.drawable.logo) // Replace with an appropriate placeholder
-                    .error(R.drawable.logo) // Replace with an appropriate error image
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
                     .into(binding.productImage)
             }
             binding.imageView.setOnClickListener {

@@ -2,6 +2,7 @@ package com.aungsanoo.findfast.Utils.API.RequestResponseModels
 
 data class ProductRequest(
     val name: String,
+    val basePrice: Double,
     val price: Double,
     val description: String,
     val material: Array<String>,

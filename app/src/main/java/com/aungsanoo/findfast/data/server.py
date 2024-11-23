@@ -315,6 +315,7 @@ def get_product_by_id(product_id):
             product_data = {
                 "id": str(product["_id"]),
                 "name": product["name"],
+                "basePrice": data.get("basePrice",0.0),
                 "price": product["price"],
                 "description": product["description"],
                 "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
@@ -337,21 +338,17 @@ def get_product_by_id(product_id):
 @app.route('/products/<string:product_id>', methods=['PUT'])
 def update_product(product_id):
     data = request.get_json()
-
-    if not data:
-        return jsonify({"status": False, "message": "No data provided"}), 400
-
-    # Ensure material, color, and size fields are stored as lists
     updated_fields = {
         "name": data.get("name"),
         "price": data.get("price"),
+        "basePrice": data.get("basePrice"),
         "description": data.get("description"),
         "material": data.get("material") if isinstance(data.get("material"), list) else [data.get("material")],
         "color": data.get("color") if isinstance(data.get("color"), list) else [data.get("color")],
         "size": data.get("size") if isinstance(data.get("size"), list) else [data.get("size")],
         "availability": data.get("availability"),
+        "imageUrl": data.get("imageUrl")
     }
-
     updated_fields = {k: v for k, v in updated_fields.items() if v is not None}
 
     result = products_collection.update_one(
@@ -363,6 +360,7 @@ def update_product(product_id):
         return jsonify({"status": True, "message": "Product updated successfully"}), 200
     else:
         return jsonify({"status": False, "message": "Product not found"}), 404
+
 @app.route('/products/<string:product_id>', methods=['DELETE'])
 def delete_product(product_id):
     try:
@@ -376,12 +374,10 @@ def delete_product(product_id):
 @app.route('/products', methods=['POST'])
 def add_product():
     data = request.get_json()
-    print("Received data:", data)  # Add this to ensure you're receiving the correct data.
-    if "imageUrl" not in data or data["imageUrl"] is None:
-        print("Warning: imageUrl is missing or null.")
     new_product = {
         "name": data["name"],
         "price": data["price"],
+        "basePrice": data.get("basePrice", 0.0),
         "description": data["description"],
         "material": data["material"],
         "color": data["color"],
@@ -456,7 +452,7 @@ def order_update(transaction_id, status):
 
         if status < 0 or status > 4:
             return jsonify({"status": False, "message": "Invalid status value. It must be between 0 and 4."}), 400
-        
+
         result = transactions_collection.update_one(
             {"_id": ObjectId(transaction_id)},
             {"$set": {"status": status, "updatedTime": datetime.utcnow()}}

@@ -4,6 +4,7 @@ data class ProductUpdateRequest(
     val productId: String,
     val name: String,
     val price: Double,
+    val basePrice: Double,
     val description: String,
     val material: String,
     val color: String,

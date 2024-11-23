@@ -49,6 +49,7 @@ class AdminAddFragment : Fragment() {
 
             val productName = binding.productName.text.toString()
             val productPrice = binding.productPrice.text.toString().toDoubleOrNull()
+            val basePrice = binding.productBasePrice.text.toString().toDoubleOrNull()
             val productDescription = binding.productDescription.text.toString()
             val productMaterial = binding.productMaterial.text.toString().split(",").map { it.trim() }
             val productColor = binding.productColor.text.toString().split(",").map { it.trim() }
@@ -61,12 +62,15 @@ class AdminAddFragment : Fragment() {
             val productBin = binding.productBin.text.toString()
             val productImageUrl = binding.productImageLink.text.toString()
 
-            if (productName.isNotEmpty() && productPrice != null && productQty > 0 &&
+            // Check if all required fields are filled out correctly
+            if (productName.isNotEmpty() && productPrice != null && basePrice != null && productQty > 0 &&
                 productAisle.isNotEmpty() && productType.isNotEmpty() &&
-                productShelf.isNotEmpty() && productBin.isNotEmpty() && productImageUrl.isNotEmpty()) {
+                productShelf.isNotEmpty() && productBin.isNotEmpty() && productImageUrl.isNotEmpty()
+            ) {
                 addProduct(
                     productName,
                     productPrice,
+                    basePrice,
                     productDescription,
                     productMaterial,
                     productColor,
@@ -88,6 +92,7 @@ class AdminAddFragment : Fragment() {
     private fun addProduct(
         name: String,
         price: Double,
+        basePrice: Double,
         description: String,
         material: List<String>,
         color: List<String>,
@@ -103,6 +108,7 @@ class AdminAddFragment : Fragment() {
         val productRequest = ProductRequest(
             name = name,
             price = price,
+            basePrice = basePrice,  // Correctly assign the base price here
             description = description,
             material = material.toTypedArray(),
             color = color.toTypedArray(),
