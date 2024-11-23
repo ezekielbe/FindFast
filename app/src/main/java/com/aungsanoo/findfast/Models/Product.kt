@@ -4,6 +4,7 @@ data class Product(
     val id: String,
     val name: String,
     val price: Double,
+    val basePrice: Double,
     val description: String,
     val material: Array<String>,
     val color: Array<String>,
@@ -13,5 +14,6 @@ data class Product(
     val aisle: String,
     val type: String,
     val shelf: String,
-    val bin: String
+    val bin: String,
+    val imageUrl: String? = null
 )

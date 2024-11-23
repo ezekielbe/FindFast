@@ -10,10 +10,10 @@
         android:icon="@drawable/ic_search"
         android:title="Search" />
 
-    <!--    <item-->
-    <!--        android:id="@+id/transactionFragment"-->
-    <!--        android:icon="@drawable/ic_transaction"-->
-    <!--        android:title="Transactions" />-->
+    <item
+        android:id="@+id/transactionFragment"
+        android:icon="@drawable/ic_transaction"
+        android:title="Transactions" />
 
     <item
         android:id="@+id/profileFragment"

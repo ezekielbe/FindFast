@@ -9,6 +9,9 @@ import com.aungsanoo.findfast.Fragments.ProductDetailFragment
 import androidx.fragment.app.FragmentActivity
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.squareup.picasso.Picasso
 
 class ProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
@@ -20,7 +23,14 @@ class ProductAdapter(private val productList: List<Product>, private val activit
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
-
+            if (!product.imageUrl.isNullOrEmpty()) {
+                Glide.with(binding.productImage.context)
+                    .load(product.imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
+                    .into(binding.productImage)
+            }
             itemView.setOnClickListener {
                 val fragment = ProductDetailFragment.newInstance(
                     productName = product.name,
@@ -30,7 +40,8 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     productColor = product.color.joinToString(", "),
                     productSize = product.size.joinToString(", "),
                     productAvailability = product.availability,
-                    productId = product.id
+                    productId = product.id,
+                    productImageUrl = product.imageUrl?: ""
                 )
 
                 activity.supportFragmentManager.beginTransaction()

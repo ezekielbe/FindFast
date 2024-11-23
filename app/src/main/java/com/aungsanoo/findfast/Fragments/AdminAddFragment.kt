@@ -19,6 +19,7 @@ class AdminAddFragment : Fragment() {
     private var _binding: FragmentAdminAddBinding? = null
     private val binding get() = _binding!!
     private var currentQty = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +30,8 @@ class AdminAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Set up buttons for quantity adjustment
         binding.increaseBtn.setOnClickListener {
             currentQty++
             binding.qtyTxt.text = currentQty.toString()
@@ -40,27 +43,34 @@ class AdminAddFragment : Fragment() {
                 binding.qtyTxt.text = currentQty.toString()
             }
         }
+
+        // Set up button to add product
         binding.addItemButton.setOnClickListener {
+
             val productName = binding.productName.text.toString()
             val productPrice = binding.productPrice.text.toString().toDoubleOrNull()
+            val basePrice = binding.productBasePrice.text.toString().toDoubleOrNull()
             val productDescription = binding.productDescription.text.toString()
             val productMaterial = binding.productMaterial.text.toString().split(",").map { it.trim() }
             val productColor = binding.productColor.text.toString().split(",").map { it.trim() }
             val productSize = binding.productSize.text.toString().split(",").map { it.trim() }
             val productAvailability = binding.productAvailability.text.toString().equals("In Stock", ignoreCase = true)
             val productQty = binding.qtyTxt.text.toString().toIntOrNull() ?: 0
-
             val productAisle = binding.productAisle.text.toString()
             val productType = binding.productType.text.toString()
             val productShelf = binding.productShelf.text.toString()
             val productBin = binding.productBin.text.toString()
+            val productImageUrl = binding.productImageLink.text.toString()
 
-            if (productName.isNotEmpty() && productPrice != null && productQty > 0 &&
+            // Check if all required fields are filled out correctly
+            if (productName.isNotEmpty() && productPrice != null && basePrice != null && productQty > 0 &&
                 productAisle.isNotEmpty() && productType.isNotEmpty() &&
-                productShelf.isNotEmpty() && productBin.isNotEmpty()) {
+                productShelf.isNotEmpty() && productBin.isNotEmpty() && productImageUrl.isNotEmpty()
+            ) {
                 addProduct(
                     productName,
                     productPrice,
+                    basePrice,
                     productDescription,
                     productMaterial,
                     productColor,
@@ -70,7 +80,8 @@ class AdminAddFragment : Fragment() {
                     productAisle,
                     productType,
                     productShelf,
-                    productBin
+                    productBin,
+                    productImageUrl
                 )
             } else {
                 Toast.makeText(requireContext(), "Please fill out all fields correctly", Toast.LENGTH_SHORT).show()
@@ -81,6 +92,7 @@ class AdminAddFragment : Fragment() {
     private fun addProduct(
         name: String,
         price: Double,
+        basePrice: Double,
         description: String,
         material: List<String>,
         color: List<String>,
@@ -90,11 +102,13 @@ class AdminAddFragment : Fragment() {
         aisle: String,
         type: String,
         shelf: String,
-        bin: String
+        bin: String,
+        imageUrl: String
     ) {
         val productRequest = ProductRequest(
             name = name,
             price = price,
+            basePrice = basePrice,  // Correctly assign the base price here
             description = description,
             material = material.toTypedArray(),
             color = color.toTypedArray(),
@@ -104,7 +118,8 @@ class AdminAddFragment : Fragment() {
             aisle = aisle,
             type = type,
             shelf = shelf,
-            bin = bin
+            bin = bin,
+            imageUrl = imageUrl
         )
 
         ApiClient.apiService.addProduct(productRequest).enqueue(object : Callback<ResponseBody> {
@@ -122,7 +137,6 @@ class AdminAddFragment : Fragment() {
             }
         })
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.aungsanoo.findfast.Fragments.AdminAddFragment
 import com.aungsanoo.findfast.Fragments.AdminHomeFragment
+import com.aungsanoo.findfast.Fragments.AdminProfileFragment
 import com.aungsanoo.findfast.Fragments.AdminSearchFragment
 import com.aungsanoo.findfast.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,6 +18,8 @@ class AdminDashboard : AppCompatActivity() {
     private lateinit var homeFragment: AdminHomeFragment
     private lateinit var searchFragment: AdminSearchFragment
     private lateinit var addFragment: AdminAddFragment
+    private lateinit var profileFragment: AdminProfileFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,6 +37,7 @@ class AdminDashboard : AppCompatActivity() {
         val fab: FloatingActionButton = findViewById(R.id.fab)
         homeFragment = AdminHomeFragment()
         searchFragment = AdminSearchFragment()
+        profileFragment = AdminProfileFragment()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -45,6 +49,7 @@ class AdminDashboard : AppCompatActivity() {
             val selectedFragment: Fragment = when (menuItem.itemId) {
                 R.id.homeFragment -> homeFragment
                 R.id.searchFragment -> searchFragment
+                R.id.profileFragment -> profileFragment
                 else -> homeFragment
             }
 
