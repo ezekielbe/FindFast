@@ -17,6 +17,7 @@ import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.FragmentAdminOrderManagementBinding
+import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +26,7 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
     private lateinit var binding: FragmentAdminOrderManagementBinding
     private var userID: String? = null
     private var userData: UserResponse? = null
+    private var transactions: List<Transaction> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,18 +66,22 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
                         val transactionList = response.body()
                         if (transactionList?.isNotEmpty() == true) {
                             showOrders(true)
+                            transactions = transactionList
                             binding.orderRecyclerView.adapter = OrderManagementAdapter(transactionList, requireContext(), this@AdminOrderManagementFragment)
                         } else {
+                            transactions = emptyList()
                             showOrders(false)
                             Toast.makeText(requireContext(), "There is no order to manage", Toast.LENGTH_SHORT).show()
                         }
                     } else {
+                        transactions = emptyList()
                         showOrders(false)
                         Toast.makeText(requireContext(), "Server error: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
 
                 override fun onFailure(call: Call<List<Transaction>>, t: Throwable) {
+                    transactions = emptyList()
                     showOrders(false)
                     Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -97,16 +103,21 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
         binding.filterAll.setOnClickListener{
             filterButtonsUIReset()
             binding.filterAll.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+
+            binding.orderRecyclerView.adapter = OrderManagementAdapter(transactions, requireContext(), this@AdminOrderManagementFragment)
         }
 
         binding.filterInProgress.setOnClickListener{
             filterButtonsUIReset()
             binding.filterInProgress.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+            binding.orderRecyclerView.adapter = OrderManagementAdapter(Utils.getInProgressOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
+
         }
 
         binding.filterDelivered.setOnClickListener{
             filterButtonsUIReset()
             binding.filterDelivered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
+            binding.orderRecyclerView.adapter = OrderManagementAdapter(Utils.getDeliveredOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
         }
     }
 
