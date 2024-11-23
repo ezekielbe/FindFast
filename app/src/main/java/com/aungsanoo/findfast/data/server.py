@@ -295,7 +295,8 @@ def checkout():
         "user_id": user_id,
         "products": products,
         "checkout_date": datetime.utcnow(),
-        "total": total_amount
+        "total": total_amount,
+        "status": 0
     }
     transactions_collection.insert_one(transaction)
 
@@ -395,14 +396,74 @@ def add_product():
     except Exception as e:
         return jsonify({"status": False, "message": str(e)}), 500
 
+# Get all transactions for report
+@app.route('/transactions', methods=['GET'])
+def transactions():
+    try:
+        transactions = transactions_collection.find({})
+        transaction_list = list(transactions)
+        response = []
+        for transaction in transaction_list:
+            response.append({
+                "_id": str(transaction["_id"]),
+                "checkout_date": transaction.get("checkout_date"),
+                "products": transaction.get("products"),
+                "total": transaction.get("total"),
+                "user_id": transaction.get("user_id"),
+                "updatedTime": transaction.get("updatedTime", transaction.get("checkout_date")),
+                "status": transaction.get("status", 0)
+            })
+
+        sorted_transactions = sorted(response, key=lambda x: x.get('updatedTime', ''), reverse=True)
+
+        return jsonify(sorted_transactions), 200
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
 
 # Get transactions of a user
 @app.route('/transactions/<string:user_id>', methods=['GET'])
 def transactions_by_user(user_id):
     try:
-        transactions = transactions_collection.find({"user_id": user_id}, {"_id": 0})
+        transactions = transactions_collection.find({"user_id": user_id})
         transaction_list = list(transactions)
-        return jsonify(transaction_list), 200
+        response = []
+        for transaction in transaction_list:
+            response.append({
+                "_id": str(transaction["_id"]),
+                "checkout_date": transaction.get("checkout_date"),
+                "products": transaction.get("products"),
+                "total": transaction.get("total"),
+                "user_id": transaction.get("user_id"),
+                "updatedTime": transaction.get("updatedTime", transaction.get("checkout_date")),
+                "status": transaction.get("status", 0)
+            })
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+
+# Update transaction by id (Order status update)
+@app.route('/transactions/<string:transaction_id>/<int:status>', methods=['PUT'])
+def order_update(transaction_id, status):
+    try:
+        transaction = transactions_collection.find_one({"_id": ObjectId(transaction_id)})
+
+        if not transaction:
+            return jsonify({"status": False, "message": "Order not found"}), 404
+
+        if status < 0 or status > 4:
+            return jsonify({"status": False, "message": "Invalid status value. It must be between 0 and 4."}), 400
+
+        result = transactions_collection.update_one(
+            {"_id": ObjectId(transaction_id)},
+            {"$set": {"status": status, "updatedTime": datetime.utcnow()}}
+        )
+
+        if result.modified_count > 0:
+            updated_transaction = transactions_collection.find_one({"_id": ObjectId(transaction_id)})
+            updated_transaction["_id"] = transaction_id
+            return jsonify(updated_transaction), 200
+        else:
+            return jsonify({"status": False, "message": "Order not found"}), 404
     except Exception as e:
         return jsonify({"status": False, "error": str(e)}), 500
 

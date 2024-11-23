@@ -21,15 +21,66 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvName"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:alpha="0.7"
                 android:layout_weight="1"
-                android:text="" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    android:alpha="0.7"
+                    android:layout_weight="1"
+                    android:text="" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardElevation="4dp"
+                    android:backgroundTint="@color/primary"
+                    app:cardCornerRadius="6dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:paddingVertical="3dp"
+                        android:paddingHorizontal="6dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:text="@string/privilege_level"/>
+
+                        <TextView
+                            android:id="@+id/tvPrivilege"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:text="User" />
+
+
+
+                    </LinearLayout>
+
+
+
+
+                </androidx.cardview.widget.CardView>
+
+
+
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_margin="5dp"
@@ -83,6 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/edit_profile"
+                        android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 
@@ -119,6 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/order_history"
+                        android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 
@@ -155,6 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/cart"
+                        android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 

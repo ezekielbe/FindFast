@@ -73,6 +73,13 @@ interface ApiService {
     @POST("products")
     fun addProduct(@Body product: ProductRequest): Call<ResponseBody>
 
+    // Transactions & Orders
+    @GET("transactions")
+    fun transactions(): Call<List<Transaction>>
+
     @GET("transactions/{id}")
     fun transactionsByUser(@Path("id") userId: String): Call<List<Transaction>>
+
+    @PUT("transactions/{id}/{status}")
+    fun updateOrder(@Path("id") transactionId: String, @Path("status") status: Int): Call<Transaction>
 }

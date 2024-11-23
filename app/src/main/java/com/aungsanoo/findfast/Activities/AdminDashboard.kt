@@ -1,6 +1,7 @@
 package com.aungsanoo.findfast.Activities
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -8,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.aungsanoo.findfast.Fragments.AdminAddFragment
 import com.aungsanoo.findfast.Fragments.AdminHomeFragment
+import com.aungsanoo.findfast.Fragments.AdminOrderManagementFragment
 import com.aungsanoo.findfast.Fragments.AdminProfileFragment
 import com.aungsanoo.findfast.Fragments.AdminSearchFragment
 import com.aungsanoo.findfast.R
@@ -17,9 +19,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class AdminDashboard : AppCompatActivity() {
     private lateinit var homeFragment: AdminHomeFragment
     private lateinit var searchFragment: AdminSearchFragment
-    private lateinit var addFragment: AdminAddFragment
+    private lateinit var orderManagementFragment: AdminOrderManagementFragment
     private lateinit var profileFragment: AdminProfileFragment
-
+    private lateinit var addFragment: AdminAddFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,6 +39,7 @@ class AdminDashboard : AppCompatActivity() {
         val fab: FloatingActionButton = findViewById(R.id.fab)
         homeFragment = AdminHomeFragment()
         searchFragment = AdminSearchFragment()
+        orderManagementFragment = AdminOrderManagementFragment()
         profileFragment = AdminProfileFragment()
 
         if (savedInstanceState == null) {
@@ -49,8 +52,15 @@ class AdminDashboard : AppCompatActivity() {
             val selectedFragment: Fragment = when (menuItem.itemId) {
                 R.id.homeFragment -> homeFragment
                 R.id.searchFragment -> searchFragment
+                R.id.orderManagementFragment -> orderManagementFragment
                 R.id.profileFragment -> profileFragment
                 else -> homeFragment
+            }
+
+            if(selectedFragment != homeFragment) {
+                fab.visibility = View.GONE
+            } else {
+                fab.visibility = View.VISIBLE
             }
 
             supportFragmentManager.beginTransaction()

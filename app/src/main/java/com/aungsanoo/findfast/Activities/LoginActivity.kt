@@ -74,6 +74,7 @@ class LoginActivity : AppCompatActivity() {
                         if (userId != null) {
                             val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
                             sharedPreferences.edit().putString("user_id", userId).apply()
+                            sharedPreferences.edit().putBoolean("isAdmin", loginResponse.isAdmin).apply()
 
                             Toast.makeText(this@LoginActivity, "Login successful!", Toast.LENGTH_SHORT).show()
 

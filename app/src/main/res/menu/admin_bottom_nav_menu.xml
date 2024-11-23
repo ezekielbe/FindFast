@@ -11,9 +11,14 @@
         android:title="Search" />
 
     <item
-        android:id="@+id/transactionFragment"
-        android:icon="@drawable/ic_transaction"
-        android:title="Transactions" />
+        android:id="@+id/orderManagementFragment"
+        android:icon="@drawable/ic_order_management"
+        android:title="@string/order_management" />
+
+    <item
+        android:id="@+id/financialReportFragment"
+        android:icon="@drawable/ic_financial"
+        android:title="@string/financial_report" />
 
     <item
         android:id="@+id/profileFragment"
