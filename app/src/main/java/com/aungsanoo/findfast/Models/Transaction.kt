@@ -6,9 +6,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Transaction(
     val checkout_date: String,
+    val updatedTime: String,
     val products: List<TnxProduct>,
     val total: Double,
-    val user_id: String
+    val user_id: String,
+    val _id: String,
+    val status: Int
 ) : Parcelable
 
 @Parcelize

@@ -9,4 +9,10 @@
     <color name="warning">#FFFFFF00</color>
     <color name="error">#A63A3A</color>
     <color name="delete">#8B0000</color>
+    <color name="dark_grey">#FFA9A9A9</color>
+    <color name="order_received">#2196F3</color>
+    <color name="item_fetched">#FF9800</color>
+    <color name="order_cancelled">#F44336</color>
+    <color name="in_transit">#00BCD4</color>
+    <color name="delivered">#4CAF50</color>
 </resources>

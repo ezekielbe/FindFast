@@ -6,9 +6,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.aungsanoo.findfast.Activities.AdminDashboard
 import com.aungsanoo.findfast.Activities.DashboardActivity
 import com.aungsanoo.findfast.Activities.LoginActivity
 import com.aungsanoo.findfast.Utils.Utils
+import okhttp3.internal.Util
 
 /**
  * Activity to navigate to Login or Register or Dashboard based on User session
@@ -31,7 +33,10 @@ class MainActivity : AppCompatActivity() {
 
     fun handleUserSessionCheck() : Boolean {
         if(Utils.validUserSession(this@MainActivity)) {
-            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
+            var intent = Intent(this@MainActivity, DashboardActivity::class.java)
+            if(Utils.isUserAdmin(this@MainActivity)) {
+                intent = Intent(this@MainActivity, AdminDashboard::class.java)
+            }
             startActivity(intent)
             finish()
             return true;
