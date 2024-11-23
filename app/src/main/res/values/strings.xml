@@ -36,6 +36,8 @@
     <string name="in_progress">In Progress</string>
     <string name="status">Status:\u0020</string>
     <string name="refresh_order_list">Refresh Order List</string>
+    <string name="find_items">Find Items</string>
+    <string name="cancel_order">Cancel Order</string>
 
     <string-array name="material_options">
         <item>All</item>

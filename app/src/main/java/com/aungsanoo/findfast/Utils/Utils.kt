@@ -38,8 +38,19 @@ object Utils {
     fun getOrderStatus(status: Int): String {
         return when (status) {
             0 -> "Order Received"
-            1 -> "Item Fetched"
+            1 -> "Ready to Deliver" // or item fetched in warehouse by admin
             2 -> "In Transit"
+            3 -> "Delivered"
+            4 -> "Order Cancelled"
+            else -> "Unknown Status"
+        }
+    }
+
+    fun getOrderStatusButtonText(status: Int): String {
+        return when (status) {
+            0 -> "Order Received"
+            1 -> "Check items availability" // or item fetched in warehouse by admin
+            2 -> "Start Delivery"
             3 -> "Delivered"
             4 -> "Order Cancelled"
             else -> "Unknown Status"

@@ -1,7 +1,6 @@
 package com.aungsanoo.findfast.Fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aungsanoo.findfast.Adapters.Listeners.OnOrderManagementDetailsClickListener
-import com.aungsanoo.findfast.Adapters.OrderManagementAdapter
+import com.aungsanoo.findfast.Adapters.AdminOrderManagementAdapter
 import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.FragmentAdminOrderManagementBinding
-import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,7 +65,7 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
                         if (transactionList?.isNotEmpty() == true) {
                             showOrders(true)
                             transactions = transactionList
-                            binding.orderRecyclerView.adapter = OrderManagementAdapter(transactionList, requireContext(), this@AdminOrderManagementFragment)
+                            binding.orderRecyclerView.adapter = AdminOrderManagementAdapter(transactionList, requireContext(), this@AdminOrderManagementFragment)
                         } else {
                             transactions = emptyList()
                             showOrders(false)
@@ -104,26 +102,27 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
             filterButtonsUIReset()
             binding.filterAll.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
 
-            binding.orderRecyclerView.adapter = OrderManagementAdapter(transactions, requireContext(), this@AdminOrderManagementFragment)
+            binding.orderRecyclerView.adapter = AdminOrderManagementAdapter(transactions, requireContext(), this@AdminOrderManagementFragment)
         }
 
         binding.filterInProgress.setOnClickListener{
             filterButtonsUIReset()
             binding.filterInProgress.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
-            binding.orderRecyclerView.adapter = OrderManagementAdapter(Utils.getInProgressOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
+            binding.orderRecyclerView.adapter = AdminOrderManagementAdapter(Utils.getInProgressOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
 
         }
 
         binding.filterDelivered.setOnClickListener{
             filterButtonsUIReset()
             binding.filterDelivered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.secondary))
-            binding.orderRecyclerView.adapter = OrderManagementAdapter(Utils.getDeliveredOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
+            binding.orderRecyclerView.adapter = AdminOrderManagementAdapter(Utils.getDeliveredOrders(transactions), requireContext(), this@AdminOrderManagementFragment)
         }
     }
 
     fun handleRefreshButton() {
         binding.btnRefresh.setOnClickListener{
             fetchAllOrders()
+            filterButtonsUIDefault()
         }
     }
 
@@ -144,6 +143,17 @@ class AdminOrderManagementFragment: Fragment(), OnOrderManagementDetailsClickLis
     }
 
     override fun onOrderManagementDetailClick(transaction: Transaction) {
-        Toast.makeText(requireContext(), "Order Details", Toast.LENGTH_SHORT).show()
+        val adminOrderDetailsFragment = AdminOrderDetailsFragment()
+
+        val bundle = Bundle().apply {
+            putParcelable("transaction", transaction)
+        }
+
+        adminOrderDetailsFragment.arguments = bundle
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, adminOrderDetailsFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

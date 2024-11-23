@@ -11,7 +11,8 @@ data class Transaction(
     val total: Double,
     val user_id: String,
     val _id: String,
-    val status: Int
+    var status: Int,
+    val orderMessage: String
 ) : Parcelable
 
 @Parcelize
@@ -19,5 +20,36 @@ data class TnxProduct(
     val id: String,
     val name: String,
     val quantity: Int,
-    val price: Double
+    val price: Double,
+    val asile: String,
+    val bin: String,
+    val imageUrl: String,
+    val description: String,
+    val qty: Int,
+    val shelf: String
 ): Parcelable
+
+
+
+//val product = {
+//    "aisle": "D3",
+//    "availability": true,
+//    "bin": "6",
+//    "color": [
+//    "Gray"
+//    ],
+//    "description": "Rack with multiple shelves for organizing items.",
+//    "id": "6730701970014d5a07d76ac3",
+//    "imageUrl": "",
+//    "material": [
+//    "Steel"
+//    ],
+//    "name": "Storage Rack",
+//    "price": 200.0,
+//    "qty": 15,
+//    "shelf": "1",
+//    "size": [
+//    "Large"
+//    ],
+//    "type": "Rack"
+//}

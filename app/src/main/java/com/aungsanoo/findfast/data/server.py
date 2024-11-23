@@ -286,7 +286,13 @@ def checkout():
                 "id": str(product["_id"]),
                 "name": product["name"],
                 "quantity": quantity,
-                "price": product["price"]
+                "price": product["price"],
+                "aisle": product["aisle"],
+                "bin": product["bin"],
+                "imageUrl": product.get("imageUrl", None),
+                "description": product["description"],
+                "qty": product["qty"],
+                "shelf": product["shelf"]
             })
             total_amount += product["price"] * quantity
 
@@ -296,7 +302,8 @@ def checkout():
         "products": products,
         "checkout_date": datetime.utcnow(),
         "total": total_amount,
-        "status": 0
+        "status": 0,
+        "orderMessage": ""
     }
     transactions_collection.insert_one(transaction)
 
@@ -411,7 +418,8 @@ def transactions():
                 "total": transaction.get("total"),
                 "user_id": transaction.get("user_id"),
                 "updatedTime": transaction.get("updatedTime", transaction.get("checkout_date")),
-                "status": transaction.get("status", 0)
+                "status": transaction.get("status", 0),
+                "orderMessage": transaction.get("orderMessage", "")
             })
 
         sorted_transactions = sorted(response, key=lambda x: x.get('updatedTime', ''), reverse=True)
@@ -435,9 +443,12 @@ def transactions_by_user(user_id):
                 "total": transaction.get("total"),
                 "user_id": transaction.get("user_id"),
                 "updatedTime": transaction.get("updatedTime", transaction.get("checkout_date")),
-                "status": transaction.get("status", 0)
+                "status": transaction.get("status", 0),
+                "orderMessage": transaction.get("orderMessage", "")
             })
-        return jsonify(response), 200
+
+        sorted_transactions = sorted(response, key=lambda x: x.get('updatedTime', ''), reverse=True)
+        return jsonify(sorted_transactions), 200
     except Exception as e:
         return jsonify({"status": False, "error": str(e)}), 500
 
@@ -466,6 +477,49 @@ def order_update(transaction_id, status):
             return jsonify({"status": False, "message": "Order not found"}), 404
     except Exception as e:
         return jsonify({"status": False, "error": str(e)}), 500
+
+# Cancel Order (=>add the products back also reason message to transaction obj)
+@app.route('/cancel_order/<string:transaction_id>', methods=['PUT'])
+def cancel_order(transaction_id):
+    try:
+        order_message = request.json.get("orderMessage", None)
+        if not order_message:
+            return jsonify({"status": False, "message": "Order message is required to cancel the order"}), 400
+
+        transaction = transactions_collection.find_one({"_id": ObjectId(transaction_id)})
+        
+        if not transaction:
+            return jsonify({"status": False, "message": "Order not found"}), 404
+        
+        if transaction['status'] == 4:
+            return jsonify({"status": False, "message": "Order is already cancelled"}), 400
+        
+        transactions_collection.update_one(
+            {"_id": ObjectId(transaction_id)},
+            {"$set": {"status": 4, "orderMessage": order_message, "updatedTime": datetime.utcnow()}}
+        )
+        
+        for product in transaction["products"]:
+            product_id = product["id"]
+            quantity = product["quantity"]
+            
+            product_record = products_collection.find_one({"_id": ObjectId(product_id)})
+            
+            if product_record:
+                current_qty = product_record.get("qty", 0)
+                updated_qty = current_qty + quantity
+                
+                # Update the product quantity back
+                products_collection.update_one(
+                    {"_id": ObjectId(product_id)},
+                    {"$set": {"qty": updated_qty}}
+                )
+        
+        return jsonify({"status": True, "message": "Order cancelled successfully", "orderMessage": order_message}), 200
+
+    except Exception as e:
+        return jsonify({"status": False, "error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)
