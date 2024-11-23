@@ -9,15 +9,14 @@ import com.aungsanoo.findfast.Adapters.Listeners.OnOrderManagementDetailsClickLi
 import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.Utils
-import com.aungsanoo.findfast.databinding.OrderItemBinding
-import okhttp3.internal.Util
+import com.aungsanoo.findfast.databinding.AdminOrderItemBinding
 
-class OrderManagementAdapter(private val orderList: List<Transaction>, private val context: Context, private val listener: OnOrderManagementDetailsClickListener) : RecyclerView.Adapter<OrderManagementAdapter.OrderViewHolder>() {
+class AdminOrderManagementAdapter(private val orderList: List<Transaction>, private val context: Context, private val listener: OnOrderManagementDetailsClickListener) : RecyclerView.Adapter<AdminOrderManagementAdapter.OrderViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): OrderManagementAdapter.OrderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.order_item, parent, false)
+    ): AdminOrderManagementAdapter.OrderViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.admin_order_item, parent, false)
         return OrderViewHolder(view)
     }
 
@@ -31,7 +30,7 @@ class OrderManagementAdapter(private val orderList: List<Transaction>, private v
     }
 
     inner class OrderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = OrderItemBinding.bind(itemView)
+        private val binding = AdminOrderItemBinding.bind(itemView)
 
         fun bind(transaction: Transaction) {
             val products = transaction.products

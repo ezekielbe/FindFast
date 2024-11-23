@@ -218,6 +218,15 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
+    <Button
+        android:id="@+id/btnOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/item_fetched"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        android:text="@string/find_items" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -241,5 +250,9 @@
             android:text="@string/back" />
 
     </LinearLayout>
+
+
+
+
 
 </LinearLayout>

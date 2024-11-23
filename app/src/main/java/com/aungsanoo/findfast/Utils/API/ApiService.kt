@@ -3,6 +3,8 @@ package com.aungsanoo.findfast.Utils.API
 import com.aungsanoo.findfast.Models.CartItem
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.Models.Transaction
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CancelOrderRequest
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CancelOrderResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
@@ -82,4 +84,7 @@ interface ApiService {
 
     @PUT("transactions/{id}/{status}")
     fun updateOrder(@Path("id") transactionId: String, @Path("status") status: Int): Call<Transaction>
+
+    @PUT("cancel_order/{id}")
+    fun cancelOrder(@Path("id") transactionId: String, @Body request: CancelOrderRequest): Call<CancelOrderResponse>
 }

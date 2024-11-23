@@ -1,5 +1,6 @@
 package com.aungsanoo.findfast.Adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aungsanoo.findfast.Adapters.Listeners.OnOrderDetailsClickListener
 import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
+import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.TransactionItemBinding
 
-class TransactionAdapter(private val tnxList: List<Transaction>, private val listener: OnOrderDetailsClickListener) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
+class TransactionAdapter(private val tnxList: List<Transaction>, private val context: Context, private val listener: OnOrderDetailsClickListener) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,12 +33,15 @@ class TransactionAdapter(private val tnxList: List<Transaction>, private val lis
         private val binding = TransactionItemBinding.bind(itemView)
 
         fun bind(transaction: Transaction) {
+            val status = transaction.status
             val products = transaction.products
             val moreThanOneProduct = products.size > 1
             val title = products.first().name
             binding.tvTitle.text = if (moreThanOneProduct) "$title,..." else title
-            binding.tvDate.text = "Purchase Date: ${transaction.checkout_date}"
+            binding.tvDate.text = "Order Date: ${Utils.extractDateTime(transaction.checkout_date)?.first}"
             binding.tvTotal.text = "Total: $ ${transaction.total}"
+            binding.viewOrderStatus.setCardBackgroundColor(Utils.getOrderColor(status, context))
+            binding.tvOrderStatus.text = Utils.getOrderStatus(status)
 
             binding.btnTransactionDetails.setOnClickListener{
                 listener.onOrderDetailClick(transaction)

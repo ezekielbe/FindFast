@@ -58,7 +58,7 @@ class OrderHistoryFragment: Fragment(), OnOrderDetailsClickListener {
                         val transactionList = response.body()
                         if (transactionList?.isNotEmpty() == true) {
                             showPurchases(true)
-                            binding.purchaseRecyclerView.adapter = TransactionAdapter(transactionList, this@OrderHistoryFragment)
+                            binding.purchaseRecyclerView.adapter = TransactionAdapter(transactionList, requireContext(),this@OrderHistoryFragment)
                         } else {
                             showPurchases(false)
                             Toast.makeText(requireContext(), "There is no purchase history", Toast.LENGTH_SHORT).show()
