@@ -96,4 +96,14 @@ object Utils {
         return transactionList.filter { it.status == 3 }
     }
 
+    fun getMonthValue(month: String): Int {
+        val monthOptions = listOf(
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        )
+        return monthOptions.indexOf(month).takeIf { it >= 0 }?.plus(1) ?: 1
+    }
+
+
+
 }
