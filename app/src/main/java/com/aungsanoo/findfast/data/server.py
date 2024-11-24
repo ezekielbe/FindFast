@@ -520,6 +520,92 @@ def cancel_order(transaction_id):
     except Exception as e:
         return jsonify({"status": False, "error": str(e)}), 500
 
+def serialize_transaction(transaction):
+    """Converts ObjectId to string and serializes the transaction document."""
+    transaction["_id"] = str(transaction["_id"])  # Convert ObjectId to string
+    for product in transaction.get("products", []):
+        if "_id" in product:  # Convert ObjectId in products if it exists
+            product["_id"] = str(product["_id"])
+    return transaction
+
+@app.route('/financial_report', methods=['POST'])
+def get_financial_report():
+    try:
+        data = request.get_json()
+        month = data.get("month")
+        year = data.get("year")
+
+        if not month or not year:
+            return jsonify({"error": "Month and year are required"}), 400
+
+        if not (1 <= month <= 12):
+            return jsonify({"error": "Invalid month"}), 400
+
+        start_date = datetime(year, month, 1)
+        if month == 12:
+            end_date = datetime(year + 1, 1, 1)
+        else:
+            end_date = datetime(year, month + 1, 1)
+
+        transactions = list(transactions_collection.find({
+            "checkout_date": {"$gte": start_date, "$lt": end_date}
+        }))
+
+        transactions = [serialize_transaction(t) for t in transactions]
+
+        manufactured_cost = 0
+        total_revenue = 0
+        total_items_sold = 0
+        total_cost = 0
+        operation_cost = len(transactions) * 10
+        total_transactions = len(transactions)
+
+        for transaction in transactions:
+            total_revenue += transaction.get("total", 0)
+
+            for product in transaction.get("products", []):
+                manufactured_cost += product.get("price", 0) * product.get("quantity", 0)
+
+            total_items_sold += sum(p.get("quantity", 0) for p in transaction.get("products", []))
+
+        total_cost = manufactured_cost + operation_cost
+        total_profit = total_revenue - total_cost
+
+        if month == 1:
+            prev_month_start = datetime(year - 1, 12, 1)
+            prev_month_end = datetime(year, 1, 1)
+        else:
+            prev_month_start = datetime(year, month - 1, 1)
+            prev_month_end = datetime(year, month, 1)
+
+        prev_month_transactions = list(transactions_collection.find({
+            "checkout_date": {"$gte": prev_month_start, "$lt": prev_month_end}
+        }))
+        prev_month_revenue = sum(t.get("total", 0) for t in prev_month_transactions)
+
+        revenue_growth = (
+            ((total_revenue - prev_month_revenue) / prev_month_revenue) * 100
+            if prev_month_revenue > 0 else None
+        )
+
+        report = {
+            "month": month,
+            "year": year,
+            "transactions": [t for t in transactions],
+            "manufactured_cost": manufactured_cost,
+            "operation_cost": operation_cost,
+            "total_cost": total_cost,
+            "total_revenue": total_revenue,
+            "previous_month_revenue": prev_month_revenue,
+            "total_profit": total_profit,
+            "total_items_sold": total_items_sold,
+            "revenue_growth": revenue_growth,
+            "total_transactions": total_transactions
+        }
+        return jsonify(report), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)

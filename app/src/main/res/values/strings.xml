@@ -43,6 +43,8 @@
     <string name="number_of_items_manufactured">Number of Items Manufactured</string>
     <string name="manufactured_cost">Manufactured Cost</string>
     <string name="revenue_growth">Revenue Growth</string>
+    <string name="number_of_orders">Number of Orders</string>
+    <string name="last_month_revenue">Last Month Revenue</string>
 
     <string-array name="material_options">
         <item>All</item>

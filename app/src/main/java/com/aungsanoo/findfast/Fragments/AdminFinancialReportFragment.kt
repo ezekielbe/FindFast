@@ -10,16 +10,25 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Adapters.AdminOrderManagementAdapter
 import com.aungsanoo.findfast.Models.Transaction
+import com.aungsanoo.findfast.Utils.API.ApiClient
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.FinancialReportRequest
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.FinancialReportResponse
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.FragmentAdminFinancialReportBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.Calendar
 
 class AdminFinancialReportFragment: Fragment() {
     private lateinit var binding: FragmentAdminFinancialReportBinding
+    private var report: FinancialReportResponse? = null
     private var transaction: Transaction? = null
     private var selectedMonth: Int = 11
     private var selectedYear: Int = 2024
+
 
     val monthOptions = listOf(
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -52,7 +61,6 @@ class AdminFinancialReportFragment: Fragment() {
         populateSpinnerDefaultData()
 
         populateData()
-
     }
 
     fun handleArguments() {
@@ -104,18 +112,35 @@ class AdminFinancialReportFragment: Fragment() {
     fun populateData() {
         binding.tvReportRange.text = "Financial report for ${monthOptions.get(selectedMonth - 1)} ${selectedYear} "
 
-        transaction?.let {
-            binding.tvDate.text = transaction!!.checkout_date
-
-//            binding.tvTotal.text = "$ ${transaction!!.total}"
-//            binding.tvCount.text = (transaction!!.products.size).toString()
-//            binding.tvOrderStatus.text = Utils.getOrderStatus(transaction!!.status)
-//            binding.tvOrderStatus.setTextColor(Utils.getOrderColor(transaction!!.status, requireContext()))
+        report?.let {
+            binding.tvDate.text = "${monthOptions.get(selectedMonth - 1)} ${selectedYear}"
+            binding.tvTotalCost.text = "$ ${String.format("%.2f", report!!.total_cost)}"
+            binding.tvManufacturedCost.text = "$ ${String.format("%.2f", report!!.manufactured_cost)}"
+            binding.tvOperationCost.text = "$ ${String.format("%.2f", report!!.operation_cost)}"
+            binding.tvTotalRevenue.text = "$ ${String.format("%.2f", report!!.total_revenue)}"
+            binding.tvTotalProfit.text = "$ ${String.format("%.2f", report!!.total_profit)}"
+            binding.tvNumberOfItems.text = "${report!!.total_items_sold}"
+            binding.tvNumberOfOrders.text = "${report!!.total_transactions}"
+            binding.tvLastMonthRevenue.text = "$ ${String.format("%.2f", report!!.previous_month_revenue)}"
+            binding.tvRevenueGrowth.text = "${String.format("%.2f", report!!.revenue_growth)}%"
         }
     }
 
     fun apiFetchReport(year: Int, month: Int) {
-        Toast.makeText(requireContext(), "Year: $year, Month: ${month}", Toast.LENGTH_SHORT).show()
-        populateData()
+        val request = FinancialReportRequest(month, year)
+        ApiClient.apiService.financialReport(request).enqueue(object : Callback<FinancialReportResponse> {
+                override fun onResponse(call: Call<FinancialReportResponse>, response: Response<FinancialReportResponse>) {
+                    if (response.isSuccessful) {
+                        report = response.body()!!
+                        populateData()
+                    } else {
+                        Toast.makeText(requireContext(), "Server error: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<FinancialReportResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }
