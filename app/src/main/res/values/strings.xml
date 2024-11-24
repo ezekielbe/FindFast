@@ -38,6 +38,11 @@
     <string name="refresh_order_list">Refresh Order List</string>
     <string name="find_items">Find Items</string>
     <string name="cancel_order">Cancel Order</string>
+    <string name="report_range">Report Range</string>
+    <string name="total_revenue">Total Revenue</string>
+    <string name="number_of_items_manufactured">Number of Items Manufactured</string>
+    <string name="manufactured_cost">Manufactured Cost</string>
+    <string name="revenue_growth">Revenue Growth</string>
 
     <string-array name="material_options">
         <item>All</item>
@@ -46,6 +51,5 @@
         <item>Plastic</item>
         <item>Glass</item>
     </string-array>
-
 
 </resources>

@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.aungsanoo.findfast.Fragments.AdminAddFragment
+import com.aungsanoo.findfast.Fragments.AdminFinancialReportFragment
 import com.aungsanoo.findfast.Fragments.AdminHomeFragment
 import com.aungsanoo.findfast.Fragments.AdminOrderManagementFragment
 import com.aungsanoo.findfast.Fragments.AdminProfileFragment
@@ -20,8 +21,10 @@ class AdminDashboard : AppCompatActivity() {
     private lateinit var homeFragment: AdminHomeFragment
     private lateinit var searchFragment: AdminSearchFragment
     private lateinit var orderManagementFragment: AdminOrderManagementFragment
+    private lateinit var financialReportFragment: AdminFinancialReportFragment
     private lateinit var profileFragment: AdminProfileFragment
     private lateinit var addFragment: AdminAddFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -40,6 +43,7 @@ class AdminDashboard : AppCompatActivity() {
         homeFragment = AdminHomeFragment()
         searchFragment = AdminSearchFragment()
         orderManagementFragment = AdminOrderManagementFragment()
+        financialReportFragment = AdminFinancialReportFragment()
         profileFragment = AdminProfileFragment()
 
         if (savedInstanceState == null) {
@@ -53,6 +57,7 @@ class AdminDashboard : AppCompatActivity() {
                 R.id.homeFragment -> homeFragment
                 R.id.searchFragment -> searchFragment
                 R.id.orderManagementFragment -> orderManagementFragment
+                R.id.financialReportFragment -> financialReportFragment
                 R.id.profileFragment -> profileFragment
                 else -> homeFragment
             }
