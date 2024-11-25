@@ -18,7 +18,6 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
     inner class AdminProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductBinding.bind(itemView)
         fun bind(product: Product) {
-            // Set product image using Glide
             if (product.imageUrl?.isNotEmpty() == true) {
                 Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
@@ -35,10 +34,7 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
 
-            // Set click listener for navigating to detail fragment
             itemView.setOnClickListener {
-                println("Product Clicked - ID: ${product.id}, Base Price: ${product.basePrice}") // Add log for debugging
-
                 val fragment = AdminProductDetailFragment.newInstance(
                     productId = product.id,
                     productName = product.name,
@@ -48,7 +44,8 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
                     productMaterial = product.material.joinToString(", "),
                     productColor = product.color.joinToString(", "),
                     productSize = product.size.joinToString(", "),
-                    productAvailability = if (product.availability) "Available" else "Out of Stock"
+                    productAvailability = if (product.availability) "Available" else "Out of Stock",
+                    qty = product.qty
                 )
 
                 activity.supportFragmentManager.beginTransaction()

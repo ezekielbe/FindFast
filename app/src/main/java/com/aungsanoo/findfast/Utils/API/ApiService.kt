@@ -54,6 +54,8 @@ interface ApiService {
         @Body request: CartUpdateRequest
     ): Call<ResponseBody>
 
+    @GET("products/{id}")
+    fun getProductById(@Path("id") productId: String): Call<Product>
 
     @GET("get_cart_items")
     fun getCartItems(@Query("user_id") userId: String): Call<List<CartItem>>
@@ -92,4 +94,9 @@ interface ApiService {
 
     @POST("financial_report")
     fun financialReport(@Body request: FinancialReportRequest): Call<FinancialReportResponse>
+    @PUT("products/{id}/quantity")
+    fun updateProductQuantity(
+        @Path("id") productId: String,
+        @Query("quantity") newQuantity: Int
+    ): Call<ResponseBody>
 }

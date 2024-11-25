@@ -57,12 +57,11 @@ class ProductDetailFragment : Fragment() {
         binding.productAvailability.text = if (productAvailability == true) "Available" else "Out of Stock"
         binding.qtyTxt.text = currentQty.toString()
 
-        // Load the product image using Picasso
         if (!productImageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(productImageUrl)
-                .placeholder(R.drawable.logo)  // Replace with your placeholder drawable
-                .error(R.drawable.logo)  // Replace with your error drawable
+                .placeholder(R.drawable.logo)
+                .error(R.drawable.logo)
                 .into(binding.productImage)
         }
 

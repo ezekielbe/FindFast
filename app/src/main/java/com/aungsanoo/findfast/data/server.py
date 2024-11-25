@@ -282,6 +282,9 @@ def checkout():
         # Fetch product details
         product = products_collection.find_one({"_id": ObjectId(product_id)})
         if product:
+            if product.get("qty", 0) < quantity:
+                return jsonify({"status": False, "message": f"Insufficient quantity for product {product['name']}"}), 400
+
             products.append({
                 "id": str(product["_id"]),
                 "name": product["name"],
@@ -295,6 +298,13 @@ def checkout():
                 "shelf": product["shelf"]
             })
             total_amount += product["price"] * quantity
+
+            # Decrement the product quantity in the product collection
+            new_quantity = product["qty"] - quantity
+            products_collection.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$set": {"qty": new_quantity}}
+            )
 
     # Create a new transaction document
     transaction = {
@@ -311,9 +321,6 @@ def checkout():
     cart_collection.delete_many({"user_id": user_id})
 
     return jsonify({"status": True, "message": "Checkout successful", "transaction_id": str(transaction["_id"])}), 200
-
-
-
 @app.route('/products/<string:product_id>', methods=['GET'])
 def get_product_by_id(product_id):
     try:
@@ -321,20 +328,20 @@ def get_product_by_id(product_id):
         if product:
             product_data = {
                 "id": str(product["_id"]),
-                "name": product["name"],
-                "basePrice": data.get("basePrice",0.0),
-                "price": product["price"],
-                "description": product["description"],
+                "name": product.get("name", ""),
+                "basePrice": product.get("basePrice", 0.0),
+                "price": product.get("price", 0.0),
+                "description": product.get("description", ""),
                 "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
                 "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
                 "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
-                "availability": product["availability"],
-                "qty": product["qty"],
-                "aisle": product["aisle"],
-                "type": product["type"],
-                "shelf": product["shelf"],
-                "bin": product["bin"],
-                "imageUrl": product("imageUrl","")
+                "availability": product.get("availability", "Unavailable"),
+                "qty": product.get("qty", 0),
+                "aisle": product.get("aisle", ""),
+                "type": product.get("type", ""),
+                "shelf": product.get("shelf", ""),
+                "bin": product.get("bin", ""),
+                "imageUrl": product.get("imageUrl", "")
             }
             return jsonify(product_data), 200
         else:
@@ -356,7 +363,12 @@ def update_product(product_id):
         "availability": data.get("availability"),
         "imageUrl": data.get("imageUrl")
     }
+
+    # Remove any None values, to avoid setting empty fields
     updated_fields = {k: v for k, v in updated_fields.items() if v is not None}
+
+    # Debugging: Print the updated fields to verify correctness
+    print(f"Updating product {product_id} with fields: {updated_fields}")
 
     result = products_collection.update_one(
         {"_id": ObjectId(product_id)},

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/textView2"
@@ -21,6 +20,7 @@
             android:layout_marginBottom="12dp"
             android:text="@string/edit_profile" />
 
+        <!-- User Information -->
         <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
@@ -61,6 +61,73 @@
             android:hint="@string/confirm_password"
             android:inputType="textPassword" />
 
+        <!-- Address Section -->
+        <EditText
+            android:id="@+id/edtStreetAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Street Address"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="City"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="State/Province"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtPostalCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Postal Code"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Country"
+            android:inputType="text" />
+
+        <!-- Credit Card Information -->
+        <EditText
+            android:id="@+id/edtCardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Credit Card Number"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/edtCardExpiry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Expiry Date (MM/YY)"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edtCardCVV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="CVV"
+            android:inputType="numberPassword" />
+
+        <!-- Last Updated -->
         <TextView
             android:id="@+id/tvLastUpdated"
             android:layout_width="match_parent"
@@ -69,6 +136,7 @@
             android:text="Last Updated: "
             android:alpha="0.8" />
 
+        <!-- Error Message -->
         <TextView
             android:id="@+id/tvError"
             android:layout_width="match_parent"
@@ -76,22 +144,24 @@
             android:layout_marginTop="6dp"
             android:text=""
             android:visibility="invisible"
-            android:textColor="@color/error"/>
+            android:textColor="@color/error" />
+
+        <!-- Update and Cancel Buttons -->
+        <Button
+            android:id="@+id/btnUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/error"
+            android:text="@string/update_profile" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/black"
+            android:text="@string/cancel" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnUpdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/error"
-        android:text="@string/update_profile" />
-
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:text="@string/cancel" />
-
-</LinearLayout>
+</ScrollView>

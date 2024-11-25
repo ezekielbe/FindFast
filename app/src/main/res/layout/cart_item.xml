@@ -7,20 +7,20 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- Product Image -->
+
     <ImageView
         android:id="@+id/productImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/nopic" />
 
-    <!-- Product Name -->
+
     <TextView
         android:id="@+id/productName"
         android:layout_width="0dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Product Price -->
+
     <TextView
         android:id="@+id/productPrice"
         android:layout_width="wrap_content"
@@ -45,7 +45,7 @@
         app:layout_constraintStart_toEndOf="@id/productImage"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Quantity Label -->
+
     <TextView
         android:id="@+id/quantityLabel"
         android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
         app:layout_constraintStart_toEndOf="@id/productImage"
         app:layout_constraintTop_toBottomOf="@id/productPrice" />
 
-    <!-- Product Quantity -->
+
     <TextView
         android:id="@+id/productQuantity"
         android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
         app:layout_constraintStart_toEndOf="@id/quantityLabel"
         app:layout_constraintTop_toBottomOf="@id/productPrice" />
 
-    <!-- Delete Icon -->
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="32dp"
