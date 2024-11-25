@@ -20,7 +20,6 @@
             android:layout_marginBottom="12dp"
             android:text="@string/edit_profile" />
 
-        <!-- User Information -->
         <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
@@ -61,7 +60,6 @@
             android:hint="@string/confirm_password"
             android:inputType="textPassword" />
 
-        <!-- Address Section -->
         <EditText
             android:id="@+id/edtStreetAddress"
             android:layout_width="match_parent"
@@ -102,7 +100,6 @@
             android:hint="Country"
             android:inputType="text" />
 
-        <!-- Credit Card Information -->
         <EditText
             android:id="@+id/edtCardNumber"
             android:layout_width="match_parent"
@@ -127,7 +124,6 @@
             android:hint="CVV"
             android:inputType="numberPassword" />
 
-        <!-- Last Updated -->
         <TextView
             android:id="@+id/tvLastUpdated"
             android:layout_width="match_parent"
@@ -146,7 +142,6 @@
             android:visibility="invisible"
             android:textColor="@color/error" />
 
-        <!-- Update and Cancel Buttons -->
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="match_parent"

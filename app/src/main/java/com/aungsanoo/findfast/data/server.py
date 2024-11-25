@@ -114,6 +114,7 @@ def update_user(user_id):
     try:
         data = request.get_json()
 
+        # Check if username is unique
         foundUser = users_collection.find_one({"username": data.get("username")})
         editingUser = users_collection.find_one({"_id": ObjectId(user_id)}, {"_id": 0})
 
@@ -128,8 +129,19 @@ def update_user(user_id):
             "email": data.get("email"),
             "password": data.get("password"),
             "phone": data.get("phone"),
+            "street_address": data.get("street_address"),
+            "city": data.get("city"),
+            "state": data.get("state"),
+            "postal_code": data.get("postal_code"),
+            "country": data.get("country"),
+            "card_number": data.get("card_number"),
+            "card_expiry": data.get("card_expiry"),
+            "card_cvv": data.get("card_cvv"),
             "updatedTime": datetime.utcnow()
         }
+
+        # Remove any None values to avoid setting empty fields
+        updated_data = {k: v for k, v in updated_data.items() if v is not None}
 
         result = users_collection.update_one(
             {"_id": ObjectId(user_id)},

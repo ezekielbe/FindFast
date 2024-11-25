@@ -107,13 +107,34 @@ class EditprofileFragment: Fragment() {
     }
 
     private fun updateUser() {
-        var username: String = binding.edtName.text.toString()
-        var password: String = binding.edtPassword.text.toString()
-        var phone: String = binding.edtPhone.text.toString()
-        var email: String = binding.edtEmail.text.toString()
+        val username: String = binding.edtName.text.toString()
+        val password: String = binding.edtPassword.text.toString()
+        val phone: String = binding.edtPhone.text.toString()
+        val email: String = binding.edtEmail.text.toString()
+        val streetAddress: String = binding.edtStreetAddress.text.toString()
+        val city: String = binding.edtCity.text.toString()
+        val state: String = binding.edtState.text.toString()
+        val postalCode: String = binding.edtPostalCode.text.toString()
+        val country: String = binding.edtCountry.text.toString()
+        val cardNumber: String = binding.edtCardNumber.text.toString()
+        val cardExpiry: String = binding.edtCardExpiry.text.toString()
+        val cardCvv: String = binding.edtCardCVV.text.toString()
 
         val userID = Utils.getUserID(requireContext())
-        val userRequest = UserRequest(username, password, phone, email)
+        val userRequest = UserRequest(
+            username = username,
+            password = password,
+            phone = phone,
+            email = email,
+            streetAddress = streetAddress,
+            city = city,
+            state = state,
+            postalCode = postalCode,
+            country = country,
+            cardNumber = cardNumber,
+            cardExpiry = cardExpiry,
+            cardCvv = cardCvv
+        )
 
         if (userID != null) {
             ApiClient.apiService.updateUser(userID, userRequest).enqueue(object : Callback<UserResponse> {
