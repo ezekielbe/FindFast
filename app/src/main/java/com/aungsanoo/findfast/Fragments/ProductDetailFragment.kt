@@ -60,8 +60,8 @@ class ProductDetailFragment : Fragment() {
         if (!productImageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(productImageUrl)
-                .placeholder(R.drawable.logo)
-                .error(R.drawable.logo)
+                .placeholder(R.drawable.nopic)
+                .error(R.drawable.nopic)
                 .into(binding.productImage)
         }
 
@@ -137,8 +137,9 @@ class ProductDetailFragment : Fragment() {
                 putString("productSize", productSize)
                 putBoolean("productAvailability", productAvailability)
                 putString("productId", productId)
-                putString("productImageUrl", productImageUrl)
+                putString("productImageUrl", productImageUrl) // Include image URL
             }
         }
     }
+
 }
