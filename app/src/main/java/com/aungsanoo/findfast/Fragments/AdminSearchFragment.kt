@@ -57,7 +57,7 @@ class AdminSearchFragment : Fragment() {
         val selectedMaterial = binding.materialSpinner.selectedItem.toString()
         val priceRange = binding.priceRangeInput.text.toString().trim()
 
-        ApiClient.apiService.searchProducts(
+        ApiClient.apiService.searchAdminProducts(
             name = if (searchQuery.isNotEmpty()) searchQuery else null,
             material = if (selectedMaterial != "All") selectedMaterial else null,
             priceRange = if (priceRange.isNotEmpty()) priceRange else null
@@ -66,7 +66,7 @@ class AdminSearchFragment : Fragment() {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
                     if (products.isNotEmpty()) {
-                        productAdapter = AdminProductAdapter(products, requireActivity())
+                        productAdapter = AdminProductAdapter(products.toMutableList(), requireActivity())
                         binding.searchRecyclerView.adapter = productAdapter
                     } else {
                         Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
@@ -78,7 +78,6 @@ class AdminSearchFragment : Fragment() {
 
             override fun onFailure(call: Call<List<Product>>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                t.printStackTrace()
             }
         })
     }

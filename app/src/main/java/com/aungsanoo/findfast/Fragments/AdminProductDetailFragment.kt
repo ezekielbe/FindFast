@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Models.Product
+import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductUpdateRequest
 import com.aungsanoo.findfast.databinding.FragmentAdminProductDetailBinding
-import com.aungsanoo.findfast.Models.Product
-import com.aungsanoo.findfast.R
 import com.bumptech.glide.Glide
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -36,12 +36,17 @@ class AdminProductDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get productId from arguments
+        // Retrieve productId from arguments
         productId = arguments?.getString("productId") ?: ""
 
-        // Load product details from server
+        // Load product details
         loadProductDetails(productId)
 
+        // Set up button listeners
+        setupListeners()
+    }
+
+    private fun setupListeners() {
         binding.increaseBtn.setOnClickListener {
             currentQty++
             updateQuantityText()
@@ -69,24 +74,9 @@ class AdminProductDetailFragment : Fragment() {
                 if (response.isSuccessful) {
                     val product = response.body()
                     product?.let {
-                        // Set values to UI components
-                        binding.productName.setText(it.name)
-                        binding.productPrice.setText(it.price.toString())
-                        binding.productDescription.setText(it.description)
-                        binding.productMaterial.setText(it.material.joinToString(", "))
-                        binding.productColor.setText(it.color.joinToString(", "))
-                        binding.productSize.setText(it.size.joinToString(", "))
-                        binding.productAvailability.setText(if (it.availability) "Available" else "Out of Stock")
-                        binding.basePrice.setText(it.basePrice.toString())
-                        binding.imageLink.setText(it.imageUrl)
-                        currentQty = it.qty
-                        updateQuantityText()
-
-                        Glide.with(binding.productImage.context)
-                            .load(it.imageUrl)
-                            .placeholder(R.drawable.nopic)
-                            .error(R.drawable.nopic)
-                            .into(binding.productImage)
+                        populateUI(it)
+                    } ?: run {
+                        Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(requireContext(), "Failed to load product details", Toast.LENGTH_SHORT).show()
@@ -99,14 +89,33 @@ class AdminProductDetailFragment : Fragment() {
         })
     }
 
+    private fun populateUI(product: Product) {
+        binding.productName.setText(product.name)
+        binding.productPrice.setText(product.price.toString())
+        binding.productDescription.setText(product.description)
+        binding.productMaterial.setText(product.material.joinToString(", "))
+        binding.productColor.setText(product.color.joinToString(", "))
+        binding.productSize.setText(product.size.joinToString(", "))
+        binding.productAvailability.setText(if (product.availability) "Available" else "Out of Stock")
+        binding.basePrice.setText(product.basePrice.toString())
+        binding.imageLink.setText(product.imageUrl)
+
+        currentQty = product.qty
+        updateQuantityText()
+
+        Glide.with(binding.productImage.context)
+            .load(product.imageUrl)
+            .placeholder(R.drawable.nopic)
+            .error(R.drawable.nopic)
+            .into(binding.productImage)
+    }
+
     private fun updateQuantityText() {
         binding.qtyTxt.text = currentQty.toString()
-
-        // Change text color based on quantity
         binding.qtyTxt.setTextColor(
             when {
                 currentQty > 10 -> Color.GREEN
-                currentQty in 4..10 -> Color.parseColor("#FFA500") // Orange color
+                currentQty in 4..10 -> Color.parseColor("#FFA500") // Orange
                 else -> Color.RED
             }
         )
@@ -178,7 +187,7 @@ class AdminProductDetailFragment : Fragment() {
         fun newInstance(
             productId: String,
             productName: String,
-            productPrice: Double,  // Add this line
+            productPrice: Double,
             productDescription: String,
             productMaterial: String,
             productColor: String,
@@ -190,16 +199,15 @@ class AdminProductDetailFragment : Fragment() {
             arguments = Bundle().apply {
                 putString("productId", productId)
                 putString("productName", productName)
-                putDouble("productPrice", productPrice) // Add this line
+                putDouble("productPrice", productPrice)
                 putString("productDescription", productDescription)
                 putString("productMaterial", productMaterial)
                 putString("productColor", productColor)
                 putString("productSize", productSize)
                 putString("productAvailability", productAvailability)
-                putDouble("productBasePrice", basePrice)
+                putDouble("basePrice", basePrice)
                 putInt("qty", qty)
             }
         }
     }
-
 }

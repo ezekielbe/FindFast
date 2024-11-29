@@ -42,7 +42,7 @@ class AdminHomeFragment : Fragment() {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
-                    binding.productRecyclerView.adapter = AdminProductAdapter(products, requireActivity())
+                    binding.productRecyclerView.adapter = AdminProductAdapter(products.toMutableList(), requireActivity())
                 } else {
                     Toast.makeText(requireContext(), "Failed to load products", Toast.LENGTH_SHORT).show()
                 }

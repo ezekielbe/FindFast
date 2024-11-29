@@ -679,6 +679,33 @@ def search_products():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"status": False, "message": str(e)}), 500
+@app.route('/search_admin_product', methods=['GET'])
+def search_admin_product():
+    ...
+    # Construct the query
+    query = {}
+    if name:
+        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}
+    if material and material != "all":
+        query["material"] = {"$regex": f".*{material}.*", "$options": "i"}
+    if price_range:
+        try:
+            if "-" in price_range:
+                min_price, max_price = map(float, price_range.split("-"))
+                query["price"] = {"$gte": min_price, "$lte": max_price}
+            else:
+                max_price = float(price_range)
+                query["price"] = {"$lte": max_price}
+        except ValueError:
+            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max'."}), 400
+
+    logging.debug(f"Constructed query: {query}")
+
+    # Fetch products from the database
+    products = list(products_collection.find(query))
+    logging.debug(f"Matching products: {products}")
+
+    ...
 
 
 if __name__ == '__main__':

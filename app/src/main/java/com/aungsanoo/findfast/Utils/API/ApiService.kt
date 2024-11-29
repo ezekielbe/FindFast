@@ -28,6 +28,12 @@ interface ApiService {
         @Query("material") material: String?,
         @Query("priceRange") priceRange: String?
     ): Call<List<Product>>
+    @GET("search_admin_product")
+    fun searchAdminProducts(
+        @Query("name") name: String?,
+        @Query("material") material: String?,
+        @Query("priceRange") priceRange: String?
+    ): Call<List<Product>>
 
 
     @POST("update_cart")

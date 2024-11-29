@@ -12,12 +12,15 @@ import com.aungsanoo.findfast.databinding.ProductBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-class AdminProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
-    RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
+class AdminProductAdapter(
+    private val productList: MutableList<Product>,
+    private val activity: FragmentActivity
+) : RecyclerView.Adapter<AdminProductAdapter.AdminProductViewHolder>() {
 
     inner class AdminProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductBinding.bind(itemView)
         fun bind(product: Product) {
+            // Load product image
             if (product.imageUrl?.isNotEmpty() == true) {
                 Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
@@ -29,11 +32,12 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
                 binding.productImage.setImageResource(R.drawable.nopic)
             }
 
-            // Set product details to UI
+            // Set product details
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
 
+            // Navigate to detail fragment on click
             itemView.setOnClickListener {
                 val fragment = AdminProductDetailFragment.newInstance(
                     productId = product.id,
@@ -65,7 +69,18 @@ class AdminProductAdapter(private val productList: List<Product>, private val ac
         holder.bind(productList[position])
     }
 
-    override fun getItemCount(): Int {
-        return productList.size
+    override fun getItemCount(): Int = productList.size
+
+    // Update data dynamically
+    fun updateData(newProductList: List<Product>) {
+        productList.clear()
+        productList.addAll(newProductList)
+        notifyDataSetChanged()
+    }
+
+    // Clear all data
+    fun clearData() {
+        productList.clear()
+        notifyDataSetChanged()
     }
 }
