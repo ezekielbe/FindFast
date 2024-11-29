@@ -1,6 +1,7 @@
 package com.aungsanoo.findfast.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,9 +35,13 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize RecyclerView
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Initialize the Material Spinner
         setupMaterialSpinner()
 
+        // Search button click listener
         binding.searchButton.setOnClickListener {
             performSearch()
         }
@@ -62,13 +67,15 @@ class SearchFragment : Fragment() {
             override fun onResponse(call: Call<List<Product>>, response: Response<List<Product>>) {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
+                    Log.d("SearchFragment", "Filtered products received: $products") // Log the products
+
                     if (products.isNotEmpty()) {
                         if (::productAdapter.isInitialized) {
-                            productAdapter.clearData()
+                            productAdapter.updateData(products)
+                        } else {
+                            productAdapter = ProductAdapter(products.toMutableList(), requireActivity())
+                            binding.searchRecyclerView.adapter = productAdapter
                         }
-                        productAdapter = ProductAdapter(products.toMutableList(), requireActivity())
-
-                        binding.searchRecyclerView.adapter = productAdapter
                     } else {
                         Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
                         if (::productAdapter.isInitialized) {

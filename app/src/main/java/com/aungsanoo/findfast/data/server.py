@@ -659,7 +659,8 @@ def search_products():
             return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max'."}), 400
 
     # Debugging: Log the constructed query
-    print(f"Search Query: {query}")
+    print(f"Incoming Params - Name: {name}, Material: {material}, Price Range: {price_range}")
+    print(f"Constructed Query: {query}")
 
     try:
         # Execute query on MongoDB
@@ -669,10 +670,14 @@ def search_products():
         for product in products:
             product["_id"] = str(product["_id"])
 
+        # Debugging: Log filtered products
+        print(f"Filtered Products: {products}")
+
         # Return the filtered products
         return jsonify(products), 200
 
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify({"status": False, "message": str(e)}), 500
 
 

@@ -25,7 +25,6 @@ class ProductAdapter(
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
 
-            // Load image using Glide
             if (!product.imageUrl.isNullOrEmpty()) {
                 Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
@@ -35,27 +34,23 @@ class ProductAdapter(
                     .into(binding.productImage)
             }
 
-            // Handle item click to open ProductDetailFragment
             itemView.setOnClickListener {
-                val existingFragment = activity.supportFragmentManager.findFragmentByTag(ProductDetailFragment.TAG)
-                if (existingFragment == null) {
-                    val fragment = ProductDetailFragment.newInstance(
-                        productName = product.name,
-                        productPrice = product.price,
-                        productDescription = product.description,
-                        productMaterial = product.material.joinToString(", "),
-                        productColor = product.color.joinToString(", "),
-                        productSize = product.size.joinToString(", "),
-                        productAvailability = product.availability,
-                        productId = product.id,
-                        productImageUrl = product.imageUrl ?: ""
-                    )
+                val fragment = ProductDetailFragment.newInstance(
+                    productName = product.name,
+                    productPrice = product.price,
+                    productDescription = product.description,
+                    productMaterial = product.material.joinToString(", "),
+                    productColor = product.color.joinToString(", "),
+                    productSize = product.size.joinToString(", "),
+                    productAvailability = product.availability,
+                    productId = product.id,
+                    productImageUrl = product.imageUrl ?: ""
+                )
 
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, fragment, ProductDetailFragment.TAG)
-                        .addToBackStack(null)
-                        .commit()
-                }
+                activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }
@@ -71,14 +66,13 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = productList.size
 
-    // Update the data in the adapter
     fun updateData(newProductList: List<Product>) {
         productList.clear()
         productList.addAll(newProductList)
         notifyDataSetChanged()
     }
 
-    // Clear the data in the adapter
+
     fun clearData() {
         productList.clear()
         notifyDataSetChanged()

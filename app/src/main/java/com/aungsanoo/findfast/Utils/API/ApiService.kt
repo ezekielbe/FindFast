@@ -22,12 +22,13 @@ interface ApiService {
     @GET("products")
     fun getProducts(): Call<List<Product>>
 
-    @GET("products")
+    @GET("search")
     fun searchProducts(
         @Query("name") name: String?,
         @Query("material") material: String?,
         @Query("priceRange") priceRange: String?
     ): Call<List<Product>>
+
 
     @POST("update_cart")
     fun updateCart(@Body request: CartUpdateRequest): Call<ResponseBody>
