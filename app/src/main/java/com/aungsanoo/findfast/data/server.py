@@ -679,33 +679,56 @@ def search_products():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"status": False, "message": str(e)}), 500
+
 @app.route('/search_admin_product', methods=['GET'])
 def search_admin_product():
-    ...
+    # Extract query parameters
+    name = request.args.get("name", "")  # Default to an empty string if not provided
+    material = request.args.get("material", "").lower()  # Default to an empty string if not provided
+    price_range = request.args.get("priceRange", "")  # Default to an empty string if not provided
+
     # Construct the query
     query = {}
     if name:
-        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}
+        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}  # Case-insensitive name filter
     if material and material != "all":
-        query["material"] = {"$regex": f".*{material}.*", "$options": "i"}
+        query["material"] = {"$regex": f".*{material}.*", "$options": "i"}  # Case-insensitive material filter
     if price_range:
         try:
-            if "-" in price_range:
+            if "-" in price_range:  # Handle range format like "10-50"
                 min_price, max_price = map(float, price_range.split("-"))
                 query["price"] = {"$gte": min_price, "$lte": max_price}
-            else:
+            else:  # Single max price like "50"
                 max_price = float(price_range)
                 query["price"] = {"$lte": max_price}
         except ValueError:
-            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max'."}), 400
+            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max' or a single value."}), 400
 
-    logging.debug(f"Constructed query: {query}")
+    # Debugging: Log the constructed query
+    print(f"Constructed query: {query}")
 
-    # Fetch products from the database
-    products = list(products_collection.find(query))
-    logging.debug(f"Matching products: {products}")
+    # Fetch matching products from the database
+    try:
+        products = list(products_collection.find(query))
+        result = []
+        for product in products:
+            result.append({
+                "id": str(product["_id"]),
+                "name": product.get("name", ""),
+                "price": product.get("price", 0.0),
+                "basePrice": product.get("basePrice", 0.0),
+                "description": product.get("description", ""),
+                "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
+                "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
+                "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
+                "availability": product.get("availability", False),
+                "qty": product.get("qty", 0),
+                "imageUrl": product.get("imageUrl", "")
+            })
+        return jsonify(result), 200
 
-    ...
+    except Exception as e:
+        return jsonify({"status": False, "message": str(e)}), 500
 
 
 if __name__ == '__main__':
