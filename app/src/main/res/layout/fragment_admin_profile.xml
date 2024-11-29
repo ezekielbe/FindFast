@@ -180,7 +180,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnCart"
+                android:id="@+id/btnTransactionDetails"
                 android:layout_width="0dp"
                 android:layout_height="130dp"
                 android:layout_weight="1"

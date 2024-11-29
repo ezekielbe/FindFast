@@ -19,6 +19,7 @@ interface ApiService {
     @PUT("user/{user_id}")
     fun updateUser(@Path("user_id") userId: String, @Body user: UserRequest): Call<UserResponse>
 
+
     @GET("products")
     fun getProducts(): Call<List<Product>>
 

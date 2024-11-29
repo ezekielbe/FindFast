@@ -71,6 +71,12 @@ class EditprofileFragment: Fragment() {
         binding.edtPassword.setText(userData?.password)
         binding.edtPassword2.setText(userData?.password)
         binding.tvLastUpdated.setText(userData?.updatedTime)
+
+        if (userData?.isAdmin == true) {
+            binding.addressAndCardGroup.visibility = View.GONE
+        } else {
+            binding.addressAndCardGroup.visibility = View.VISIBLE
+        }
     }
 
     private fun handleUpdateProfileButton() {
