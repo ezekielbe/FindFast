@@ -63,10 +63,17 @@ class SearchFragment : Fragment() {
                 if (response.isSuccessful && response.body() != null) {
                     val products = response.body()!!
                     if (products.isNotEmpty()) {
-                        productAdapter = ProductAdapter(products, requireActivity())
+                        if (::productAdapter.isInitialized) {
+                            productAdapter.clearData()
+                        }
+                        productAdapter = ProductAdapter(products.toMutableList(), requireActivity())
+
                         binding.searchRecyclerView.adapter = productAdapter
                     } else {
                         Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
+                        if (::productAdapter.isInitialized) {
+                            productAdapter.clearData()
+                        }
                     }
                 } else {
                     Toast.makeText(requireContext(), "Search failed", Toast.LENGTH_SHORT).show()

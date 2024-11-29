@@ -74,7 +74,7 @@ class CartFragment : Fragment() {
     private fun updateProductQuantities() {
         cartItems.forEach { cartItem ->
             val productId = cartItem.product_id
-            val newQuantity = cartItem.quantity - cartItem.quantity  // Decrease by quantity bought
+            val newQuantity = cartItem.quantity - cartItem.quantity
 
             if (newQuantity >= 0) {
                 if (productId != null) {

@@ -631,5 +631,50 @@ def get_financial_report():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/search', methods=['GET'])
+def search_products():
+    # Retrieve query parameters
+    name = request.args.get("name")
+    material = request.args.get("material")
+    price_range = request.args.get("priceRange")
+
+    # Initialize the query
+    query = {}
+
+    # Add name filter
+    if name:
+        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}  # Case-insensitive regex match
+
+    # Add material filter
+    if material and material.lower() != "all":
+        query["material"] = material
+
+    # Add price range filter
+    if price_range:
+        try:
+            # Expecting format: "min-max"
+            min_price, max_price = map(float, price_range.split("-"))
+            query["price"] = {"$gte": min_price, "$lte": max_price}
+        except ValueError:
+            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max'."}), 400
+
+    # Debugging: Log the constructed query
+    print(f"Search Query: {query}")
+
+    try:
+        # Execute query on MongoDB
+        products = list(products_collection.find(query))
+
+        # Convert ObjectId to string
+        for product in products:
+            product["_id"] = str(product["_id"])
+
+        # Return the filtered products
+        return jsonify(products), 200
+
+    except Exception as e:
+        return jsonify({"status": False, "message": str(e)}), 500
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)

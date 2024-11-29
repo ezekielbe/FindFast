@@ -1,30 +1,10 @@
 package com.aungsanoo.findfast.Utils.API
 
-import com.aungsanoo.findfast.Models.CartItem
-import com.aungsanoo.findfast.Models.Product
-import com.aungsanoo.findfast.Models.Transaction
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CancelOrderRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CancelOrderResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.CartUpdateRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.FinancialReportRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.FinancialReportResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.LoginResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductUpdateRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterRequest
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.RegisterResponse
-import com.aungsanoo.findfast.Utils.API.RequestResponseModels.UserRequest
+import com.aungsanoo.findfast.Models.*
+import com.aungsanoo.findfast.Utils.API.RequestResponseModels.*
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.DELETE
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @POST("register")
@@ -50,9 +30,7 @@ interface ApiService {
     ): Call<List<Product>>
 
     @POST("update_cart")
-    fun updateCart(
-        @Body request: CartUpdateRequest
-    ): Call<ResponseBody>
+    fun updateCart(@Body request: CartUpdateRequest): Call<ResponseBody>
 
     @GET("products/{id}")
     fun getProductById(@Path("id") productId: String): Call<Product>
@@ -70,16 +48,14 @@ interface ApiService {
     fun checkout(@Body userId: Map<String, String>): Call<ResponseBody>
 
     @PUT("products/{id}")
-    fun updateProduct(
-        @Path("id") productId: String,
-        @Body request: ProductUpdateRequest
-    ): Call<ResponseBody>
+    fun updateProduct(@Path("id") productId: String, @Body request: ProductUpdateRequest): Call<ResponseBody>
+
     @DELETE("products/{id}")
     fun deleteProduct(@Path("id") productId: String): Call<ResponseBody>
+
     @POST("products")
     fun addProduct(@Body product: ProductRequest): Call<ResponseBody>
 
-    // Transactions & Orders
     @GET("transactions")
     fun transactions(): Call<List<Transaction>>
 
@@ -94,6 +70,7 @@ interface ApiService {
 
     @POST("financial_report")
     fun financialReport(@Body request: FinancialReportRequest): Call<FinancialReportResponse>
+
     @PUT("products/{id}/quantity")
     fun updateProductQuantity(
         @Path("id") productId: String,

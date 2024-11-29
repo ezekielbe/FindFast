@@ -117,6 +117,7 @@ class ProductDetailFragment : Fragment() {
     }
 
     companion object {
+        const val TAG = "ProductDetailFragment"
         fun newInstance(
             productName: String,
             productPrice: Double,
