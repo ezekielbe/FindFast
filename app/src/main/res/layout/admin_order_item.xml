@@ -16,8 +16,10 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/firstProductInOrder"
             android:layout_width="100dp"
             android:layout_height="150dp"
+            android:paddingRight="3dp"
             android:src="@drawable/ic_no_purchase"/>
 
         <LinearLayout

@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aungsanoo.findfast.Models.TnxProduct
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.TransactionProductItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class TransactionProductAdapter(private val productList: List<TnxProduct>) : RecyclerView.Adapter<TransactionProductAdapter.TransactionProductViewHolder>() {
     override fun onCreateViewHolder(
@@ -37,6 +39,17 @@ class TransactionProductAdapter(private val productList: List<TnxProduct>) : Rec
             binding.tvCount.text = " x ${itemCount}"
             binding.tvPrice.text = "Price/item: $ ${price}"
             binding.tvTotal.text = "Total: $ ${total}"
+
+            if (product.imageUrl?.isNotEmpty() == true) {
+                Glide.with(binding.productImage.context)
+                    .load(product.imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
+                    .into(binding.productImage)
+            } else {
+                binding.productImage.setImageResource(R.drawable.ic_product)
+            }
         }
     }
 
