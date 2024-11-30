@@ -11,6 +11,8 @@ import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.TransactionItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class TransactionAdapter(private val tnxList: List<Transaction>, private val context: Context, private val listener: OnOrderDetailsClickListener) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
     override fun onCreateViewHolder(
@@ -42,6 +44,20 @@ class TransactionAdapter(private val tnxList: List<Transaction>, private val con
             binding.tvTotal.text = "Total: $ ${transaction.total}"
             binding.viewOrderStatus.setCardBackgroundColor(Utils.getOrderColor(status, context))
             binding.tvOrderStatus.text = Utils.getOrderStatus(status)
+
+            for (product in products) {
+                if (product.imageUrl?.isNotEmpty() == true) {
+                    Glide.with(binding.firstProductInOrder.context)
+                        .load(product.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.nopic)
+                        .error(R.drawable.nopic)
+                        .into(binding.firstProductInOrder)
+                    break
+                } else {
+                    binding.firstProductInOrder.setImageResource(R.drawable.ic_no_purchase)
+                }
+            }
 
             binding.btnTransactionDetails.setOnClickListener{
                 listener.onOrderDetailClick(transaction)

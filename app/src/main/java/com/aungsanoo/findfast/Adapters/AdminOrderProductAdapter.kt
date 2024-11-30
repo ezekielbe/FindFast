@@ -8,6 +8,8 @@ import com.aungsanoo.findfast.Models.TnxProduct
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.AdminOrderProductItemBinding
 import com.aungsanoo.findfast.databinding.TransactionProductItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class AdminOrderProductAdapter(private val productList: List<TnxProduct>) : RecyclerView.Adapter<AdminOrderProductAdapter.AdminOrderProductViewHolder>() {
     override fun onCreateViewHolder(
@@ -32,13 +34,26 @@ class AdminOrderProductAdapter(private val productList: List<TnxProduct>) : Recy
         fun bind(product: TnxProduct) {
             val name: String = product.name
             val itemCount: Int = product.quantity
-            val price: Double = product.price
-            val total: Double = itemCount * price
+            val aisle: String = "Aisle: ${product.asile}"
+            val bin: String = "Bin: ${product.bin}"
+            val shelf: String = "Shelf: ${product.shelf}"
+
+            if (product.imageUrl?.isNotEmpty() == true) {
+                Glide.with(binding.productImage.context)
+                    .load(product.imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.drawable.nopic)
+                    .error(R.drawable.nopic)
+                    .into(binding.productImage)
+            } else {
+                binding.productImage.setImageResource(R.drawable.ic_product)
+            }
+
             binding.tvName.text = name
             binding.tvCount.text = " x ${itemCount}"
-            binding.tvAisle.text = "Aisle: C3"
-            binding.tvBin.text = "Bin: 9"
-            binding.tvShelf.text = "Shelf: 1"
+            binding.tvAisle.text = aisle
+            binding.tvBin.text = bin
+            binding.tvShelf.text = shelf
         }
     }
 

@@ -10,6 +10,8 @@ import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.Utils
 import com.aungsanoo.findfast.databinding.AdminOrderItemBinding
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class AdminOrderManagementAdapter(private val orderList: List<Transaction>, private val context: Context, private val listener: OnOrderManagementDetailsClickListener) : RecyclerView.Adapter<AdminOrderManagementAdapter.OrderViewHolder>() {
     override fun onCreateViewHolder(
@@ -44,6 +46,22 @@ class AdminOrderManagementAdapter(private val orderList: List<Transaction>, priv
             binding.tvUpdateDate.text = "Last Update: ${lastUpdateDate}"
             binding.viewOrderStatus.setCardBackgroundColor(Utils.getOrderColor(status, context))
             binding.tvOrderStatus.text = Utils.getOrderStatus(status)
+
+
+            for (product in products) {
+                if (product.imageUrl?.isNotEmpty() == true) {
+                    Glide.with(binding.firstProductInOrder.context)
+                        .load(product.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .placeholder(R.drawable.nopic)
+                        .error(R.drawable.nopic)
+                        .into(binding.firstProductInOrder)
+                    break
+                } else {
+                    binding.firstProductInOrder.setImageResource(R.drawable.ic_no_purchase)
+                }
+            }
+
 
             binding.btnOrderDetails.setOnClickListener{
                 listener.onOrderManagementDetailClick(transaction)
