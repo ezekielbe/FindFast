@@ -168,6 +168,7 @@ def get_products():
             "id": str(product["_id"]),
             "name": product["name"],
             "price": product["price"],
+            "basePrice": product.get("basePrice", product["price"]),
             "description": product["description"],
             "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
             "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
@@ -301,6 +302,7 @@ def checkout():
                 "id": str(product["_id"]),
                 "name": product["name"],
                 "quantity": quantity,
+                "basePrice": product.get("basePrice", product["price"]),
                 "price": product["price"],
                 "aisle": product["aisle"],
                 "bin": product["bin"],
@@ -588,7 +590,14 @@ def get_financial_report():
             total_revenue += transaction.get("total", 0)
 
             for product in transaction.get("products", []):
-                manufactured_cost += product.get("price", 0) * product.get("quantity", 0)
+                sale_price = product.get("price", 0)
+
+                fetchedProduct = products_collection.find_one({"_id": ObjectId(product["id"])})
+                if fetchedProduct:
+                    sale_price = fetchedProduct.get("price", 0)
+
+                base_price = product.get("basePrice", sale_price)
+                manufactured_cost += base_price * product.get("quantity", 0)
 
             total_items_sold += sum(p.get("quantity", 0) for p in transaction.get("products", []))
 
@@ -607,9 +616,17 @@ def get_financial_report():
         }))
         prev_month_revenue = sum(t.get("total", 0) for t in prev_month_transactions)
 
+        # revenue_growth = (
+        #     ((total_revenue - prev_month_revenue) / prev_month_revenue) * 100
+        #     if prev_month_revenue > 0 else None
+        # )
+
+        current_date = datetime.now()
+        is_future_month = (year > current_date.year) or (year == current_date.year and month > current_date.month)
+
         revenue_growth = (
-            ((total_revenue - prev_month_revenue) / prev_month_revenue) * 100
-            if prev_month_revenue > 0 else None
+            0 if is_future_month else 
+            (((total_revenue - prev_month_revenue) / prev_month_revenue) * 100 if prev_month_revenue > 0 else None)
         )
 
         report = {

@@ -113,7 +113,8 @@ class AdminFinancialReportFragment: Fragment() {
         binding.tvReportRange.text = "Financial report for ${monthOptions.get(selectedMonth - 1)} ${selectedYear} "
 
         report?.let {
-            binding.tvDate.text = "${monthOptions.get(selectedMonth - 1)} ${selectedYear}"
+            val (startDate, endDate) = Utils.getMonthDateRange(selectedYear, selectedMonth)
+            binding.tvDate.text = "${startDate} - ${endDate}"
             binding.tvTotalCost.text = "$ ${String.format("%.2f", report!!.total_cost)}"
             binding.tvManufacturedCost.text = "$ ${String.format("%.2f", report!!.manufactured_cost)}"
             binding.tvOperationCost.text = "$ ${String.format("%.2f", report!!.operation_cost)}"
