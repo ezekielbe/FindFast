@@ -21,6 +21,7 @@ data class TnxProduct(
     val name: String,
     val quantity: Int,
     val price: Double,
+    val basePrice: Double,
     val asile: String,
     val bin: String,
     val imageUrl: String,

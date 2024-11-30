@@ -201,7 +201,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_total_cost"/>
+                        android:src="@drawable/ic_manufacture_cost"/>
 
                     <TextView
                         android:id="@+id/tvManufacturedCost"
@@ -241,7 +241,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_total_cost"/>
+                        android:src="@drawable/ic_operation_cost"/>
 
                     <TextView
                         android:id="@+id/tvOperationCost"
@@ -291,7 +291,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_total_cost"/>
+                        android:src="@drawable/ic_total_revenue"/>
 
                     <TextView
                         android:id="@+id/tvTotalRevenue"
@@ -331,7 +331,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_total_cost"/>
+                        android:src="@drawable/ic_total_profit"/>
 
                     <TextView
                         android:id="@+id/tvTotalProfit"
@@ -457,7 +457,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:src="@drawable/ic_total_cost"/>
+                        android:src="@drawable/ic_last_revenue"/>
 
                     <TextView
                         android:id="@+id/tvLastMonthRevenue"

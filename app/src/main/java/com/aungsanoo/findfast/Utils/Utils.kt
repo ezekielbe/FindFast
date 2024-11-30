@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.aungsanoo.findfast.Models.Transaction
 import com.aungsanoo.findfast.R
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 object Utils {
@@ -105,5 +106,21 @@ object Utils {
     }
 
 
+    fun getMonthDateRange(year: Int, month: Int): Pair<String, String> {
+        val calendar = Calendar.getInstance(Locale.US)
+
+        // Set to the first day of the given month and year
+        calendar.set(year, month - 1, 1)
+        val startDate = calendar.time
+
+        // Move to the first day of the next month, then subtract one day to get the last day of the current month
+        calendar.add(Calendar.MONTH, 1)
+        calendar.add(Calendar.DAY_OF_MONTH, -1)
+        val endDate = calendar.time
+
+        // Format dates to MM/DD/YYYY
+        val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
+        return Pair(dateFormat.format(startDate), dateFormat.format(endDate))
+    }
 
 }
