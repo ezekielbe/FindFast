@@ -44,34 +44,34 @@
                     android:backgroundTint="@color/primary"
                     app:cardCornerRadius="6dp">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:paddingVertical="3dp"
-                        android:paddingHorizontal="6dp"
-                        android:orientation="horizontal">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:gravity="start"-->
+<!--                        android:paddingVertical="3dp"-->
+<!--                        android:paddingHorizontal="6dp"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
-                            android:text="@string/privilege_level"/>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:textSize="15sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:text="@string/privilege_level"/>-->
 
-                        <TextView
-                            android:id="@+id/tvPrivilege"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/white"
-                            android:text="User" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvPrivilege"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:textSize="15sp"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:text="User" />-->
 
 
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
 
 

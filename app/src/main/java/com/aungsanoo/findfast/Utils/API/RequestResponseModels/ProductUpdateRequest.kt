@@ -9,5 +9,6 @@ data class ProductUpdateRequest(
     val material: String,
     val color: String,
     val size: String,
-    val availability: Boolean
+    val availability: Boolean,
+    val imageUrl: String
 )

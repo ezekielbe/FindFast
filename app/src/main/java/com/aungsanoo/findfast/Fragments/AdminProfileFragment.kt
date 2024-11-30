@@ -56,7 +56,7 @@ class AdminProfileFragment: Fragment() {
 
         handleOrderHistoryButton()
 
-        handleCartButton()
+        handleTransactionHistoryButton()
 
         handleLogoutButton()
     }
@@ -130,10 +130,13 @@ class AdminProfileFragment: Fragment() {
         }
     }
 
-    fun handleCartButton() {
-//        binding.btnCart.setOnClickListener{
-//            (activity as? DashboardActivity)?.setMenu(R.id.cartFragment)
-//        }
+    fun handleTransactionHistoryButton() {
+        binding.btnTransactionDetails.setOnClickListener{
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, AdminFinancialReportFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     fun handleLogoutButton() {

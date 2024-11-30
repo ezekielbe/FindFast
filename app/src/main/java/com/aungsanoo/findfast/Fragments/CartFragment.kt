@@ -39,8 +39,8 @@ class CartFragment : Fragment() {
         binding.checkoutButton.setOnClickListener {
             checkout()
         }
-
     }
+
     private fun checkout() {
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null)
@@ -50,6 +50,9 @@ class CartFragment : Fragment() {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         Toast.makeText(requireContext(), "Checkout successful!", Toast.LENGTH_SHORT).show()
+
+                        // Update quantity in database for each item
+                        updateProductQuantities()
 
                         cartItems.clear()
                         cartAdapter.notifyDataSetChanged()
@@ -65,6 +68,33 @@ class CartFragment : Fragment() {
             })
         } else {
             Toast.makeText(requireContext(), "User ID not found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateProductQuantities() {
+        cartItems.forEach { cartItem ->
+            val productId = cartItem.product_id
+            val newQuantity = cartItem.quantity - cartItem.quantity
+
+            if (newQuantity >= 0) {
+                if (productId != null) {
+                    ApiClient.apiService.updateProductQuantity(productId, newQuantity).enqueue(object : Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            if (response.isSuccessful) {
+                                Log.d("CartFragment", "Product $productId quantity updated successfully")
+                            } else {
+                                Log.e("CartFragment", "Failed to update product $productId quantity: ${response.code()}")
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.e("CartFragment", "Error updating product $productId quantity: ${t.message}")
+                        }
+                    })
+                }
+            } else {
+                Log.e("CartFragment", "Error: New quantity for product $productId is negative")
+            }
         }
     }
 

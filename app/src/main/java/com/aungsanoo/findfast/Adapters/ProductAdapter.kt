@@ -3,18 +3,19 @@ package com.aungsanoo.findfast.Adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.aungsanoo.findfast.Models.Product
 import com.aungsanoo.findfast.Fragments.ProductDetailFragment
-import androidx.fragment.app.FragmentActivity
 import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.databinding.ProductBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.squareup.picasso.Picasso
 
-class ProductAdapter(private val productList: List<Product>, private val activity: FragmentActivity) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private val productList: MutableList<Product>,
+    private val activity: FragmentActivity
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ProductBinding.bind(itemView)
@@ -23,6 +24,7 @@ class ProductAdapter(private val productList: List<Product>, private val activit
             binding.productNameTxt.text = product.name
             binding.productPriceTxt.text = "Price: $${product.price}"
             binding.productDescription.text = product.description
+
             if (!product.imageUrl.isNullOrEmpty()) {
                 Glide.with(binding.productImage.context)
                     .load(product.imageUrl)
@@ -31,6 +33,7 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     .error(R.drawable.nopic)
                     .into(binding.productImage)
             }
+
             itemView.setOnClickListener {
                 val fragment = ProductDetailFragment.newInstance(
                     productName = product.name,
@@ -41,7 +44,7 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     productSize = product.size.joinToString(", "),
                     productAvailability = product.availability,
                     productId = product.id,
-                    productImageUrl = product.imageUrl?: ""
+                    productImageUrl = product.imageUrl ?: ""
                 )
 
                 activity.supportFragmentManager.beginTransaction()
@@ -49,7 +52,6 @@ class ProductAdapter(private val productList: List<Product>, private val activit
                     .addToBackStack(null)
                     .commit()
             }
-
         }
     }
 
@@ -62,7 +64,17 @@ class ProductAdapter(private val productList: List<Product>, private val activit
         holder.bind(productList[position])
     }
 
-    override fun getItemCount(): Int {
-        return productList.size
+    override fun getItemCount(): Int = productList.size
+
+    fun updateData(newProductList: List<Product>) {
+        productList.clear()
+        productList.addAll(newProductList)
+        notifyDataSetChanged()
+    }
+
+
+    fun clearData() {
+        productList.clear()
+        notifyDataSetChanged()
     }
 }

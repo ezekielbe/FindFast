@@ -1,14 +1,18 @@
 package com.aungsanoo.findfast.Fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Models.Product
+import com.aungsanoo.findfast.R
 import com.aungsanoo.findfast.Utils.API.ApiClient
 import com.aungsanoo.findfast.Utils.API.RequestResponseModels.ProductUpdateRequest
 import com.aungsanoo.findfast.databinding.FragmentAdminProductDetailBinding
+import com.bumptech.glide.Glide
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,6 +23,7 @@ class AdminProductDetailFragment : Fragment() {
     private var _binding: FragmentAdminProductDetailBinding? = null
     private val binding get() = _binding!!
     private var currentQty = 0
+    private lateinit var productId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,39 +36,26 @@ class AdminProductDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Extract arguments
-        val productId = arguments?.getString("productId") ?: ""
-        val productName = arguments?.getString("productName") ?: ""
-        val productPrice = arguments?.getDouble("productPrice") ?: 0.0
-        val productDescription = arguments?.getString("productDescription") ?: ""
-        val productMaterial = arguments?.getString("productMaterial") ?: ""
-        val productColor = arguments?.getString("productColor") ?: ""
-        val productSize = arguments?.getString("productSize") ?: ""
-        val productAvailability = arguments?.getString("productAvailability") ?: "false"
-        val productBasePrice = arguments?.getDouble("productBasePrice") ?: 0.0  // Retrieve basePrice
+        // Retrieve productId from arguments
+        productId = arguments?.getString("productId") ?: ""
 
-        println("Base Price retrieved in onViewCreated: $productBasePrice") // Log basePrice
+        // Load product details
+        loadProductDetails(productId)
 
-        // Set values to UI components
-        binding.productName.setText(productName)
-        binding.productPrice.setText(productPrice.toString())
-        binding.productDescription.setText(productDescription)
-        binding.productMaterial.setText(productMaterial)
-        binding.productColor.setText(productColor)
-        binding.productSize.setText(productSize)
-        binding.productAvailability.setText(productAvailability)
-        binding.basePrice.setText(productBasePrice.toString())  // Set basePrice to EditText
+        // Set up button listeners
+        setupListeners()
+    }
 
-        // Setup button click listeners
+    private fun setupListeners() {
         binding.increaseBtn.setOnClickListener {
             currentQty++
-            binding.qtyTxt.text = currentQty.toString()
+            updateQuantityText()
         }
 
         binding.decreaseBtn.setOnClickListener {
             if (currentQty > 1) {
                 currentQty--
-                binding.qtyTxt.text = currentQty.toString()
+                updateQuantityText()
             }
         }
 
@@ -74,6 +66,59 @@ class AdminProductDetailFragment : Fragment() {
         binding.deleteBtn.setOnClickListener {
             deleteProduct(productId)
         }
+    }
+
+    private fun loadProductDetails(productId: String) {
+        ApiClient.apiService.getProductById(productId).enqueue(object : Callback<Product> {
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                if (response.isSuccessful) {
+                    val product = response.body()
+                    product?.let {
+                        populateUI(it)
+                    } ?: run {
+                        Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Failed to load product details", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun populateUI(product: Product) {
+        binding.productName.setText(product.name)
+        binding.productPrice.setText(product.price.toString())
+        binding.productDescription.setText(product.description)
+        binding.productMaterial.setText(product.material.joinToString(", "))
+        binding.productColor.setText(product.color.joinToString(", "))
+        binding.productSize.setText(product.size.joinToString(", "))
+        binding.productAvailability.setText(if (product.availability) "Available" else "Out of Stock")
+        binding.basePrice.setText(product.basePrice.toString())
+        binding.imageLink.setText(product.imageUrl)
+
+        currentQty = product.qty
+        updateQuantityText()
+
+        Glide.with(binding.productImage.context)
+            .load(product.imageUrl)
+            .placeholder(R.drawable.nopic)
+            .error(R.drawable.nopic)
+            .into(binding.productImage)
+    }
+
+    private fun updateQuantityText() {
+        binding.qtyTxt.text = currentQty.toString()
+        binding.qtyTxt.setTextColor(
+            when {
+                currentQty > 10 -> Color.GREEN
+                currentQty in 4..10 -> Color.parseColor("#FFA500") // Orange
+                else -> Color.RED
+            }
+        )
     }
 
     private fun deleteProduct(productId: String) {
@@ -102,6 +147,7 @@ class AdminProductDetailFragment : Fragment() {
         val updatedSize = binding.productSize.text.toString()
         val updatedAvailability = binding.productAvailability.text.toString().equals("Available", ignoreCase = true)
         val updatedBasePrice = binding.basePrice.text.toString().toDoubleOrNull() ?: 0.0
+        val updatedImageUrl = binding.imageLink.text.toString()
 
         val updateRequest = ProductUpdateRequest(
             productId = productId,
@@ -112,7 +158,8 @@ class AdminProductDetailFragment : Fragment() {
             material = updatedMaterial,
             color = updatedColor,
             size = updatedSize,
-            availability = updatedAvailability
+            availability = updatedAvailability,
+            imageUrl = updatedImageUrl
         )
 
         ApiClient.apiService.updateProduct(productId, updateRequest).enqueue(object : Callback<ResponseBody> {
@@ -146,7 +193,8 @@ class AdminProductDetailFragment : Fragment() {
             productColor: String,
             productSize: String,
             productAvailability: String,
-            basePrice: Double
+            basePrice: Double,
+            qty: Int
         ) = AdminProductDetailFragment().apply {
             arguments = Bundle().apply {
                 putString("productId", productId)
@@ -157,7 +205,8 @@ class AdminProductDetailFragment : Fragment() {
                 putString("productColor", productColor)
                 putString("productSize", productSize)
                 putString("productAvailability", productAvailability)
-                putDouble("productBasePrice", basePrice)  // Add basePrice to arguments
+                putDouble("basePrice", basePrice)
+                putInt("qty", qty)
             }
         }
     }

@@ -114,6 +114,7 @@ def update_user(user_id):
     try:
         data = request.get_json()
 
+        # Check if username is unique
         foundUser = users_collection.find_one({"username": data.get("username")})
         editingUser = users_collection.find_one({"_id": ObjectId(user_id)}, {"_id": 0})
 
@@ -128,8 +129,19 @@ def update_user(user_id):
             "email": data.get("email"),
             "password": data.get("password"),
             "phone": data.get("phone"),
+            "street_address": data.get("street_address"),
+            "city": data.get("city"),
+            "state": data.get("state"),
+            "postal_code": data.get("postal_code"),
+            "country": data.get("country"),
+            "card_number": data.get("card_number"),
+            "card_expiry": data.get("card_expiry"),
+            "card_cvv": data.get("card_cvv"),
             "updatedTime": datetime.utcnow()
         }
+
+        # Remove any None values to avoid setting empty fields
+        updated_data = {k: v for k, v in updated_data.items() if v is not None}
 
         result = users_collection.update_one(
             {"_id": ObjectId(user_id)},
@@ -282,6 +294,9 @@ def checkout():
         # Fetch product details
         product = products_collection.find_one({"_id": ObjectId(product_id)})
         if product:
+            if product.get("qty", 0) < quantity:
+                return jsonify({"status": False, "message": f"Insufficient quantity for product {product['name']}"}), 400
+
             products.append({
                 "id": str(product["_id"]),
                 "name": product["name"],
@@ -295,6 +310,13 @@ def checkout():
                 "shelf": product["shelf"]
             })
             total_amount += product["price"] * quantity
+
+            # Decrement the product quantity in the product collection
+            new_quantity = product["qty"] - quantity
+            products_collection.update_one(
+                {"_id": ObjectId(product_id)},
+                {"$set": {"qty": new_quantity}}
+            )
 
     # Create a new transaction document
     transaction = {
@@ -311,9 +333,6 @@ def checkout():
     cart_collection.delete_many({"user_id": user_id})
 
     return jsonify({"status": True, "message": "Checkout successful", "transaction_id": str(transaction["_id"])}), 200
-
-
-
 @app.route('/products/<string:product_id>', methods=['GET'])
 def get_product_by_id(product_id):
     try:
@@ -321,20 +340,20 @@ def get_product_by_id(product_id):
         if product:
             product_data = {
                 "id": str(product["_id"]),
-                "name": product["name"],
-                "basePrice": data.get("basePrice",0.0),
-                "price": product["price"],
-                "description": product["description"],
+                "name": product.get("name", ""),
+                "basePrice": product.get("basePrice", 0.0),
+                "price": product.get("price", 0.0),
+                "description": product.get("description", ""),
                 "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
                 "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
                 "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
-                "availability": product["availability"],
-                "qty": product["qty"],
-                "aisle": product["aisle"],
-                "type": product["type"],
-                "shelf": product["shelf"],
-                "bin": product["bin"],
-                "imageUrl": product("imageUrl","")
+                "availability": product.get("availability", "Unavailable"),
+                "qty": product.get("qty", 0),
+                "aisle": product.get("aisle", ""),
+                "type": product.get("type", ""),
+                "shelf": product.get("shelf", ""),
+                "bin": product.get("bin", ""),
+                "imageUrl": product.get("imageUrl", "")
             }
             return jsonify(product_data), 200
         else:
@@ -356,7 +375,12 @@ def update_product(product_id):
         "availability": data.get("availability"),
         "imageUrl": data.get("imageUrl")
     }
+
+    # Remove any None values, to avoid setting empty fields
     updated_fields = {k: v for k, v in updated_fields.items() if v is not None}
+
+    # Debugging: Print the updated fields to verify correctness
+    print(f"Updating product {product_id} with fields: {updated_fields}")
 
     result = products_collection.update_one(
         {"_id": ObjectId(product_id)},
@@ -606,6 +630,106 @@ def get_financial_report():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/search', methods=['GET'])
+def search_products():
+    # Retrieve query parameters
+    name = request.args.get("name")
+    material = request.args.get("material")
+    price_range = request.args.get("priceRange")
+
+    # Initialize the query
+    query = {}
+
+    # Add name filter
+    if name:
+        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}  # Case-insensitive regex match
+
+    # Add material filter
+    if material and material.lower() != "all":
+        query["material"] = material
+
+    # Add price range filter
+    if price_range:
+        try:
+            # Expecting format: "min-max"
+            min_price, max_price = map(float, price_range.split("-"))
+            query["price"] = {"$gte": min_price, "$lte": max_price}
+        except ValueError:
+            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max'."}), 400
+
+    # Debugging: Log the constructed query
+    print(f"Incoming Params - Name: {name}, Material: {material}, Price Range: {price_range}")
+    print(f"Constructed Query: {query}")
+
+    try:
+        # Execute query on MongoDB
+        products = list(products_collection.find(query))
+
+        # Convert ObjectId to string
+        for product in products:
+            product["_id"] = str(product["_id"])
+
+        # Debugging: Log filtered products
+        print(f"Filtered Products: {products}")
+
+        # Return the filtered products
+        return jsonify(products), 200
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"status": False, "message": str(e)}), 500
+
+@app.route('/search_admin_product', methods=['GET'])
+def search_admin_product():
+    # Extract query parameters
+    name = request.args.get("name", "")  # Default to an empty string if not provided
+    material = request.args.get("material", "").lower()  # Default to an empty string if not provided
+    price_range = request.args.get("priceRange", "")  # Default to an empty string if not provided
+
+    # Construct the query
+    query = {}
+    if name:
+        query["name"] = {"$regex": f".*{name}.*", "$options": "i"}  # Case-insensitive name filter
+    if material and material != "all":
+        query["material"] = {"$regex": f".*{material}.*", "$options": "i"}  # Case-insensitive material filter
+    if price_range:
+        try:
+            if "-" in price_range:  # Handle range format like "10-50"
+                min_price, max_price = map(float, price_range.split("-"))
+                query["price"] = {"$gte": min_price, "$lte": max_price}
+            else:  # Single max price like "50"
+                max_price = float(price_range)
+                query["price"] = {"$lte": max_price}
+        except ValueError:
+            return jsonify({"status": False, "message": "Invalid price range format. Use 'min-max' or a single value."}), 400
+
+    # Debugging: Log the constructed query
+    print(f"Constructed query: {query}")
+
+    # Fetch matching products from the database
+    try:
+        products = list(products_collection.find(query))
+        result = []
+        for product in products:
+            result.append({
+                "id": str(product["_id"]),
+                "name": product.get("name", ""),
+                "price": product.get("price", 0.0),
+                "basePrice": product.get("basePrice", 0.0),
+                "description": product.get("description", ""),
+                "material": product.get("material", [] if isinstance(product.get("material"), list) else [product.get("material")]),
+                "color": product.get("color", [] if isinstance(product.get("color"), list) else [product.get("color")]),
+                "size": product.get("size", [] if isinstance(product.get("size"), list) else [product.get("size")]),
+                "availability": product.get("availability", False),
+                "qty": product.get("qty", 0),
+                "imageUrl": product.get("imageUrl", "")
+            })
+        return jsonify(result), 200
+
+    except Exception as e:
+        return jsonify({"status": False, "message": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="8888",debug=True)

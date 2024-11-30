@@ -57,12 +57,11 @@ class ProductDetailFragment : Fragment() {
         binding.productAvailability.text = if (productAvailability == true) "Available" else "Out of Stock"
         binding.qtyTxt.text = currentQty.toString()
 
-        // Load the product image using Picasso
         if (!productImageUrl.isNullOrEmpty()) {
             Picasso.get()
                 .load(productImageUrl)
-                .placeholder(R.drawable.logo)  // Replace with your placeholder drawable
-                .error(R.drawable.logo)  // Replace with your error drawable
+                .placeholder(R.drawable.nopic)
+                .error(R.drawable.nopic)
                 .into(binding.productImage)
         }
 
@@ -118,6 +117,7 @@ class ProductDetailFragment : Fragment() {
     }
 
     companion object {
+        const val TAG = "ProductDetailFragment"
         fun newInstance(
             productName: String,
             productPrice: Double,
@@ -138,8 +138,9 @@ class ProductDetailFragment : Fragment() {
                 putString("productSize", productSize)
                 putBoolean("productAvailability", productAvailability)
                 putString("productId", productId)
-                putString("productImageUrl", productImageUrl)
+                putString("productImageUrl", productImageUrl) // Include image URL
             }
         }
     }
+
 }
