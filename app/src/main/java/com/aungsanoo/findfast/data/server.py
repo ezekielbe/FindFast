@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 app = Flask(__name__)
@@ -454,6 +454,50 @@ def transactions():
     except Exception as e:
         return jsonify({"status": False, "error": str(e)}), 500
 
+@app.route('/transactions_by_date', methods=['POST'])
+def transactions_by_date():
+    try:
+        data = request.get_json()
+        start_date_str = data.get("start_date")  # "YYYY-MM-DD"
+        end_date_str = data.get("end_date")  # "YYYY-MM-DD"
+
+        if not start_date_str or not end_date_str:
+            return jsonify({"error": "Start date and end date are required"}), 400
+
+        try:
+            start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date_str, "%Y-%m-%d") + timedelta(days=1)  # End of the given day
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+
+        transactions = list(transactions_collection.find({
+            "checkout_date": {"$gte": start_date, "$lt": end_date}
+        }))
+
+        response = []
+        for transaction in transactions:
+            response.append({
+                "_id": str(transaction["_id"]),
+                "checkout_date": transaction.get("checkout_date"),
+                "products": transaction.get("products"),
+                "total": transaction.get("total"),
+                "user_id": transaction.get("user_id"),
+                "updatedTime": transaction.get("updatedTime", transaction.get("checkout_date")),
+                "status": transaction.get("status", 0),
+                "orderMessage": transaction.get("orderMessage", "")
+            })
+
+        sorted_transactions = sorted(
+            response,
+            key=lambda x: x.get("updatedTime", x.get("checkout_date", "")),
+            reverse=True
+        )
+
+        return jsonify(sorted_transactions), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 # Get transactions of a user
 @app.route('/transactions/<string:user_id>', methods=['GET'])
 def transactions_by_user(user_id):
@@ -615,11 +659,6 @@ def get_financial_report():
             "checkout_date": {"$gte": prev_month_start, "$lt": prev_month_end}
         }))
         prev_month_revenue = sum(t.get("total", 0) for t in prev_month_transactions)
-
-        # revenue_growth = (
-        #     ((total_revenue - prev_month_revenue) / prev_month_revenue) * 100
-        #     if prev_month_revenue > 0 else None
-        # )
 
         current_date = datetime.now()
         is_future_month = (year > current_date.year) or (year == current_date.year and month > current_date.month)

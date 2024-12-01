@@ -108,7 +108,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnEditProfile"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -145,7 +145,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnOrderHistory"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -182,7 +182,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnCart"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"

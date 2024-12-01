@@ -26,8 +26,9 @@ class AdminFinancialReportFragment: Fragment() {
     private lateinit var binding: FragmentAdminFinancialReportBinding
     private var report: FinancialReportResponse? = null
     private var transaction: Transaction? = null
-    private var selectedMonth: Int = 11
-    private var selectedYear: Int = 2024
+
+    private var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1
+    private var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
 
 
     val monthOptions = listOf(
@@ -106,7 +107,7 @@ class AdminFinancialReportFragment: Fragment() {
         binding.monthSpinner.adapter = monthAdapter
         binding.monthSpinner.setSelection(currentMonth)
 
-        apiFetchReport(currentYear, currentMonth)
+        apiFetchReport(currentYear, currentMonth + 1)
     }
 
     fun populateData() {

@@ -45,6 +45,9 @@
     <string name="revenue_growth">Revenue Growth</string>
     <string name="number_of_orders">Number of Orders</string>
     <string name="last_month_revenue">Last Month Revenue</string>
+    <string name="manage_orders">Manage Orders</string>
+    <string name="filter_order_list">Filter Order List</string>
+    <string name="all">All</string>
 
     <string-array name="material_options">
         <item>All</item>

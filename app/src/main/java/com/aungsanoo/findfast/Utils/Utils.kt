@@ -97,6 +97,18 @@ object Utils {
         return transactionList.filter { it.status == 3 }
     }
 
+    /*
+    0 -> all
+    1 -> in progress
+    2 -> delivered
+     */
+    fun getOrdersBasedOnStatus(transactionList: List<Transaction>, status: Int): List<Transaction> {
+        if(status == 0) return transactionList
+        else if (status == 1) return getInProgressOrders(transactionList)
+        else if (status == 2) return getDeliveredOrders(transactionList)
+        else return transactionList
+    }
+
     fun getMonthValue(month: String): Int {
         val monthOptions = listOf(
             "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -121,6 +133,27 @@ object Utils {
         // Format dates to MM/DD/YYYY
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.US)
         return Pair(dateFormat.format(startDate), dateFormat.format(endDate))
+    }
+
+    fun getDateRange(rangeFilter: String): Pair<String, String> {
+        val apiDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val calendar = Calendar.getInstance()
+        val endDate = calendar.time
+
+        // Calculate start date based on range
+        when (rangeFilter) {
+            "1D" -> { /* 1 Day: Start and end date are the same */ }
+            "1W" -> calendar.add(Calendar.DAY_OF_YEAR, -7) // 1 Week
+            "1M" -> calendar.add(Calendar.MONTH, -1)       // 1 Month
+            "3M" -> calendar.add(Calendar.MONTH, -3)       // 3 Months
+            "1Y" -> calendar.add(Calendar.YEAR, -1)        // 1 Year
+            else -> throw IllegalArgumentException("Invalid range filter: $rangeFilter")
+        }
+
+        val startDate = calendar.time
+
+        // Format the dates
+        return Pair(apiDateFormat.format(startDate), apiDateFormat.format(endDate))
     }
 
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.aungsanoo.findfast.Activities.AdminDashboard
 import com.aungsanoo.findfast.Activities.DashboardActivity
 import com.aungsanoo.findfast.Activities.LoginActivity
 import com.aungsanoo.findfast.R
@@ -54,9 +55,9 @@ class AdminProfileFragment: Fragment() {
 
         handleEditProfileButton()
 
-        handleOrderHistoryButton()
+        handleManageOrdersButton()
 
-        handleTransactionHistoryButton()
+        handleFinancialReportButton()
 
         handleLogoutButton()
     }
@@ -115,27 +116,16 @@ class AdminProfileFragment: Fragment() {
         }
     }
 
-    fun handleOrderHistoryButton() {
-        binding.btnOrderHistory.setOnClickListener{
-            val orderHistoryFragment = OrderHistoryFragment()
-
-            val bundle = Bundle()
-            bundle.putString("id", userData?._id)
-            orderHistoryFragment.arguments = bundle
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, orderHistoryFragment)
-                .addToBackStack(null)
-                .commit()
+    fun handleManageOrdersButton() {
+        binding.btnManageOrders.setOnClickListener{
+            (activity as? AdminDashboard)?.setMenu(R.id.orderManagementFragment)
         }
     }
 
-    fun handleTransactionHistoryButton() {
-        binding.btnTransactionDetails.setOnClickListener{
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, AdminFinancialReportFragment())
-                .addToBackStack(null)
-                .commit()
+    fun handleFinancialReportButton() {
+
+        binding.btnFinancialReport.setOnClickListener{
+            (activity as? AdminDashboard)?.setMenu(R.id.financialReportFragment)
         }
     }
 
