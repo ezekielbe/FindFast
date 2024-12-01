@@ -8,29 +8,30 @@
     android:orientation="vertical"
     tools:context=".Activities.DashboardActivity">
 
-    <androidx.fragment.app.FragmentContainerView
+    <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingHorizontal="10dp"
-        android:paddingTop="10dp"
-        />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:src="@drawable/add"
-        app:backgroundTint="@color/primary"
-        android:contentDescription="Add" />
+        android:paddingTop="10dp">
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:src="@drawable/add"
+            app:backgroundTint="@color/primary"
+            android:contentDescription="Add" />
+    </FrameLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/adminBottomNavigationContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:itemIconSize="35dp"
         android:layout_gravity="bottom"
+        app:itemIconSize="35dp"
         app:menu="@menu/admin_bottom_nav_menu" />
 
 </LinearLayout>
