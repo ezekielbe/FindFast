@@ -108,7 +108,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnEditProfile"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -143,9 +143,9 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnOrderHistory"
+                android:id="@+id/btnManageOrders"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -170,7 +170,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/user_activities"
+                        android:text="@string/order_management"
                         android:textAlignment="center"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -179,10 +179,11 @@
 
             </androidx.cardview.widget.CardView>
 
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnTransactionDetails"
+                android:id="@+id/btnFinancialReport"
                 android:layout_width="0dp"
-                android:layout_height="130dp"
+                android:layout_height="140dp"
                 android:layout_weight="1"
                 app:cardCornerRadius="16dp"
                 android:foreground="?android:attr/selectableItemBackground"
@@ -202,7 +203,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
-                        android:src="@drawable/ic_cart"/>
+                        android:src="@drawable/ic_financial_report"/>
 
                     <TextView
                         android:layout_width="wrap_content"

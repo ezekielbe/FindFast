@@ -67,6 +67,9 @@ interface ApiService {
     @GET("transactions")
     fun transactions(): Call<List<Transaction>>
 
+    @POST("transactions_by_date")
+    fun transactionsByDate(@Body request: TransactionsByDateRequest): Call<List<Transaction>>
+
     @GET("transactions/{id}")
     fun transactionsByUser(@Path("id") userId: String): Call<List<Transaction>>
 

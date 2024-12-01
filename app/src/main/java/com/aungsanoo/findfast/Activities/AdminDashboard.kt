@@ -25,6 +25,8 @@ class AdminDashboard : AppCompatActivity() {
     private lateinit var profileFragment: AdminProfileFragment
     private lateinit var addFragment: AdminAddFragment
 
+    private lateinit var bottomNavigationView: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,8 +38,6 @@ class AdminDashboard : AppCompatActivity() {
             insets
         }
 
-        val bottomNavigationView =
-            findViewById<BottomNavigationView>(R.id.adminBottomNavigationContainer)
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         homeFragment = AdminHomeFragment()
@@ -51,6 +51,9 @@ class AdminDashboard : AppCompatActivity() {
                 .add(R.id.fragmentContainer, homeFragment, "HOME")
                 .commit()
         }
+
+        bottomNavigationView =
+            findViewById<BottomNavigationView>(R.id.adminBottomNavigationContainer)
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             val selectedFragment: Fragment = when (menuItem.itemId) {
@@ -88,5 +91,9 @@ class AdminDashboard : AppCompatActivity() {
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    fun setMenu(id: Int) {
+        bottomNavigationView.selectedItemId = id
     }
 }
